@@ -1,0 +1,635 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:background="#FAFAFA"
+        android:layout_gravity="center"
+        android:gravity="center"
+        app:title="My Trips"
+        app:navigationIcon="@drawable/ic_keyboard_arrow_left_black_24dp"
+        app:titleTextColor="@color/black"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:layout_constraintTop_toTopOf="@+id/fragment_container1"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_margin="10dp"
+                app:cardElevation="4dp"
+                android:id="@+id/card1"
+                app:cardCornerRadius="2dp"
+                app:cardUseCompatPadding="false"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/image"
+                            android:src="@drawable/bike_icon">
+
+                        </ImageView>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:id="@+id/rel"
+                            android:layout_toLeftOf="@+id/image"
+                            >
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_gravity="top"
+                                    android:gravity="right|end"
+                                    android:layout_toLeftOf="@+id/rel"
+                                    >
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="18sp"
+                                        android:textColor="#000"
+                                        android:text="154">
+
+                                    </TextView>
+
+
+
+                                </RelativeLayout>
+
+
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textColor="#000"
+                                android:id="@+id/time"
+                                android:text="Wed, Sept 01,07:40 AM">
+
+                            </TextView>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:layout_marginTop="5dp"
+                                android:textColor="#000"
+                                android:id="@+id/no"
+                                android:layout_below="@+id/time"
+                                android:text="Mini.CRN 642734672">
+
+                            </TextView>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_below="@+id/no"
+                                android:id="@+id/originlayout"
+                                android:orientation="horizontal"
+                                android:layout_height="wrap_content">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:text="Origin"
+                                        android:id="@+id/origin"
+                                        >
+
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:text="Destination"
+                                        android:layout_below="@+id/origin">
+
+
+                                    </TextView>
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/image11"
+                                    android:layout_margin="10dp"
+                                    android:src="@drawable/woman">
+
+                                </ImageView>
+                            </LinearLayout>
+
+
+
+
+
+
+
+                        </RelativeLayout>
+
+
+
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_margin="10dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="2dp"
+                app:cardUseCompatPadding="false"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/image1"
+                            android:src="@drawable/trip_icon">
+
+                        </ImageView>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:id="@+id/rel1"
+                            android:layout_toLeftOf="@+id/image"
+                            >
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_gravity="top"
+                                    android:gravity="right|end"
+                                    android:layout_toLeftOf="@+id/rel"
+                                    >
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="18sp"
+                                        android:textColor="#000"
+                                        android:text="154">
+
+                                    </TextView>
+
+
+
+                                </RelativeLayout>
+
+
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textColor="#000"
+                                android:id="@+id/time1"
+                                android:text="Wed, Sept 01,07:40 AM">
+
+                            </TextView>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:layout_marginTop="5dp"
+                                android:textColor="#000"
+                                android:id="@+id/no1"
+                                android:layout_below="@+id/time1"
+                                android:text="Mini.CRN 642734672">
+
+                            </TextView>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_below="@+id/no1"
+                                android:id="@+id/originlayout1"
+                                android:orientation="horizontal"
+                                android:layout_height="wrap_content">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:text="Origin"
+                                        android:id="@+id/origin1"
+                                        >
+
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:text="Destination"
+                                        android:layout_below="@+id/origin">
+
+
+                                    </TextView>
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/image111"
+                                    android:layout_margin="10dp"
+                                    android:src="@drawable/woman">
+
+                                </ImageView>
+                            </LinearLayout>
+
+
+
+
+
+
+
+                        </RelativeLayout>
+
+
+
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_margin="10dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="2dp"
+                app:cardUseCompatPadding="false"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/image2"
+                            android:src="@drawable/trip_icon">
+
+                        </ImageView>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:id="@+id/rel2"
+                            android:layout_toLeftOf="@+id/image"
+                            >
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_gravity="top"
+                                    android:gravity="right|end"
+                                    android:layout_toLeftOf="@+id/rel"
+                                    >
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="18sp"
+                                        android:textColor="#000"
+                                        android:text="154">
+
+                                    </TextView>
+
+
+
+                                </RelativeLayout>
+
+
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textColor="#000"
+                                android:id="@+id/time2"
+                                android:text="Wed, Sept 01,07:40 AM">
+
+                            </TextView>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:layout_marginTop="5dp"
+                                android:textColor="#000"
+                                android:id="@+id/no2"
+                                android:layout_below="@+id/time2"
+                                android:text="Mini.CRN 642734672">
+
+                            </TextView>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_below="@+id/no2"
+                                android:id="@+id/originlayout2"
+                                android:orientation="horizontal"
+                                android:layout_height="wrap_content">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:text="Origin"
+                                        android:id="@+id/origin2"
+                                        >
+
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:text="Destination"
+                                        android:layout_below="@+id/origin">
+
+
+                                    </TextView>
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/image112"
+                                    android:layout_margin="10dp"
+                                    android:src="@drawable/woman">
+
+                                </ImageView>
+                            </LinearLayout>
+
+
+
+
+
+
+
+                        </RelativeLayout>
+
+
+
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_margin="10dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="2dp"
+                app:cardUseCompatPadding="false"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/image4"
+                            android:src="@drawable/bike_icon">
+
+                        </ImageView>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:id="@+id/rel4"
+                            android:layout_toLeftOf="@+id/image"
+                            >
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_gravity="top"
+                                    android:gravity="right|end"
+                                    android:layout_toLeftOf="@+id/rel"
+                                    >
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="18sp"
+                                        android:textColor="#000"
+                                        android:text="154">
+
+                                    </TextView>
+
+
+
+                                </RelativeLayout>
+
+
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textColor="#000"
+                                android:id="@+id/time4"
+                                android:text="Wed, Sept 01,07:40 AM">
+
+                            </TextView>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:layout_marginTop="5dp"
+                                android:textColor="#000"
+                                android:id="@+id/no4"
+                                android:layout_below="@+id/time4"
+                                android:text="Mini.CRN 642734672">
+
+                            </TextView>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_below="@+id/no4"
+                                android:id="@+id/originlayout4"
+                                android:orientation="horizontal"
+                                android:layout_height="wrap_content">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:text="Origin"
+                                        android:id="@+id/origin4"
+                                        >
+
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:text="Destination"
+                                        android:layout_below="@+id/origin">
+
+
+                                    </TextView>
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/image114"
+                                    android:layout_margin="10dp"
+                                    android:src="@drawable/woman">
+
+                                </ImageView>
+                            </LinearLayout>
+
+
+
+
+
+
+
+                        </RelativeLayout>
+
+
+
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>
+

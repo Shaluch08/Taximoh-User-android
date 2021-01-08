@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:background="#FAFAFA"
+        android:layout_gravity="center"
+        android:gravity="center"
+        app:title="Trip Detail"
+        app:navigationIcon="@drawable/ic_keyboard_arrow_left_black_24dp"
+        app:titleTextColor="@color/black"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:layout_constraintTop_toTopOf="@+id/fragment_container1"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:fitsSystemWindows="true"
+                        android:scaleType="fitXY"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:src="@drawable/map">
+
+
+                    </ImageView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="15dp"
+                        android:layout_height="wrap_content">
+
+
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Your Trip"
+                            android:textColor="#000"
+                            android:textSize="16sp"
+                            android:layout_marginRight="220dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/woman"
+                            >
+
+
+                        </ImageView>
+
+                        <TextView
+                            android:id="@+id/cancelled"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="CANCELLED"
+                            android:textColor="#000"
+                            android:gravity="right"
+                            android:textStyle="bold"
+                            android:layout_marginRight="5dp"
+                            android:layout_toLeftOf="@+id/image"
+                            />
+                    </LinearLayout>
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#000">
+
+
+                    </View>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:padding="10dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_marginLeft="20dp"
+                            android:src="@drawable/trip_icon">
+
+                        </ImageView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end|right"
+                            android:text="Mini White Wagnor"
+                            android:textColor="#000"
+                            android:textSize="18sp"
+                            android:layout_marginLeft="30dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_toLeftOf="@+id/image"
+                            >
+
+                        </TextView>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#000">
+
+
+                    </View>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:padding="10dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_marginLeft="20dp"
+                            android:src="@drawable/trip_icon">
+
+                        </ImageView>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="30dp"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="$0"
+                                android:textColor="#000"
+                                android:textSize="18sp"
+                                android:layout_marginRight="5dp"
+                                android:layout_toLeftOf="@+id/image"
+                                >
+
+                            </TextView>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="25dp"
+                                android:text="Origin"
+                                android:id="@+id/origin"
+                                >
+
+
+                            </TextView>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="Destination"
+                                android:layout_below="@+id/origin">
+
+
+                            </TextView>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#000">
+
+
+                    </View>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:padding="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bill Details"
+                            android:textColor="#000"
+                            android:textStyle="bold"
+
+                            android:textSize="18sp"
+                            android:layout_marginRight="5dp"
+                            android:layout_toLeftOf="@+id/image"
+                            >
+
+                        </TextView>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="15dp"
+                            android:layout_height="wrap_content">
+
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Your Trip"
+                                android:textColor="#000"
+                                android:textSize="16sp"
+                                android:layout_weight="1"
+                                >
+
+
+                            </TextView>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000"
+                                android:textSize="16sp"
+                                android:text="$212"
+                                android:layout_below="@+id/origin">
+
+
+                            </TextView>
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginTop="20dp"
+                            android:background="#000">
+
+
+                        </View>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="15dp"
+                            android:layout_height="wrap_content">
+
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Rounded Off"
+                                android:textColor="#000"
+                                android:textSize="16sp"
+                                android:layout_weight="1"
+                                >
+
+
+                            </TextView>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000"
+                                android:textSize="16sp"
+                                android:text="$2"
+                                android:layout_below="@+id/origin">
+
+
+                            </TextView>
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginTop="20dp"
+                            android:background="#000">
+
+
+                        </View>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="15dp"
+                            android:layout_height="wrap_content">
+
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Bill"
+                                android:textStyle="bold"
+                                android:textColor="#000"
+                                android:textSize="20sp"
+                                android:layout_weight="1"
+                                >
+
+
+                            </TextView>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:text="$2"
+                                android:textStyle="bold"
+                                android:textColor="#000"
+                                android:layout_below="@+id/origin">
+
+
+                            </TextView>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#000"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:padding="10dp"
+                        android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Payment"
+                        android:textColor="#000"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+
+                        android:layout_marginRight="5dp"
+                        android:layout_toLeftOf="@+id/image"
+                        >
+
+                    </TextView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="20dp"
+                        android:layout_height="wrap_content">
+
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Old Money Postpaid"
+                            android:textColor="#000"
+                            android:textSize="18sp"
+                            android:layout_weight="1"
+                            >
+
+
+                        </TextView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#000"
+                            android:textSize="18sp"
+                            android:text="$212"
+                            android:layout_below="@+id/origin">
+
+
+                        </TextView>
+                    </LinearLayout>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginTop="20dp"
+                        android:background="#000">
+
+
+                    </View>
+
+
+                </LinearLayout>
+
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>
+
