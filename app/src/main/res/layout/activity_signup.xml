@@ -22,18 +22,21 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
         app:layout_constraintTop_toTopOf="@+id/fragment_container1"/>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="20dp"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             app:layout_constraintTop_toBottomOf="@+id/log">
 
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:hint="User Name"
+                android:hint="Name"
                 style="@style/TextInputLayout"
                 android:drawableLeft="@drawable/mail"
                 android:layout_height="wrap_content">
@@ -45,7 +48,7 @@
                     android:gravity="top"
                     android:inputType="textEmailAddress"
                     android:singleLine="true"
->
+                    >
 
                 </com.google.android.material.textfield.TextInputEditText>
 
@@ -64,7 +67,7 @@
                     android:gravity="top"
                     android:inputType="textEmailAddress"
                     android:singleLine="true"
->
+                    >
 
                 </com.google.android.material.textfield.TextInputEditText>
 
@@ -81,13 +84,73 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/phone"
                     android:gravity="top"
-                    android:inputType="textEmailAddress"
+                    android:inputType="number"
+                    android:maxLength="10"
                     android:singleLine="true"
                     >
 
                 </com.google.android.material.textfield.TextInputEditText>
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                style="@style/TextInputLayout"
+                android:hint="DOB"
+                android:id="@+id/selectdob"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/dob"
+                    android:gravity="top"
+                    android:inputType="none"
+                    android:focusableInTouchMode="false"
+                    android:focusable="true"
+                    android:singleLine="true"
+                    >
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gender"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioGroup"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal"
+                >
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="55dp"
+                    android:text="Male"
+                    android:id="@+id/radioButton"
+                    android:checked="false"
+                    android:textSize="18dp" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Female"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/radioButton2"
+                    android:checked="false"
+                    android:textSize="18dp"
+                    />
+            </RadioGroup>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -108,9 +171,9 @@
                 </com.google.android.material.textfield.TextInputEditText>
 
             </com.google.android.material.textfield.TextInputLayout>
-          <com.google.android.material.textfield.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-              style="@style/TextInputLayout"
+                style="@style/TextInputLayout"
                 android:hint="Confirm Password"
                 android:drawableLeft="@drawable/mail"
                 android:layout_height="wrap_content">
@@ -135,7 +198,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="20dp"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textAllCaps="true"
@@ -148,7 +211,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="10dp"
-                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -170,5 +232,8 @@
             </LinearLayout>
 
         </LinearLayout>
+
+    </ScrollView>
+
 </androidx.appcompat.widget.LinearLayoutCompat>
 

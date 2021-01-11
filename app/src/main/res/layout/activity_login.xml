@@ -26,24 +26,11 @@
          android:letterSpacing=".01"
          android:textColor="@color/black"
          android:fontFamily="sans-serif"
-         android:text="Loopfoon">
+         android:text="TaxiMoh">
 
 
      </TextView>
-        <TextView
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:textStyle="bold"
-         android:textSize="25sp"
-         android:textAllCaps="true"
-            android:layout_marginLeft="10dp"
-         android:letterSpacing=".01"
-         android:textColor="@color/black"
-         android:fontFamily="cursive"
-         android:text="PAY">
 
-
-     </TextView>
     </LinearLayout>
 
         <LinearLayout
@@ -58,7 +45,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 style="@style/TextInputLayout"
-                android:hint="Email"
+                android:hint="Phone No"
                 android:drawableLeft="@drawable/mail"
                 android:layout_height="wrap_content">
 
@@ -67,9 +54,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/email"
                     android:gravity="top"
-                    android:inputType="textEmailAddress"
-                    android:singleLine="true"
->
+                    android:inputType="number"
+                    android:singleLine="true">
 
                 </com.google.android.material.textfield.TextInputEditText>
 

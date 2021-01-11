@@ -3,19 +3,15 @@ package com.uveous.loopfoonpay
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.Gravity
 import android.view.View
-import android.widget.Button
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.google.android.material.internal.NavigationMenu
 import com.google.android.material.navigation.NavigationView
-import java.lang.reflect.Array.newInstance
 
 class TravelDashboard : AppCompatActivity(){
 
@@ -50,6 +46,12 @@ class TravelDashboard : AppCompatActivity(){
                 R.id.trip -> {
                     val i=Intent(this,Trip::class.java)
                     startActivity(i)
+                }
+                R.id.logout -> {
+                    val mSharedPreferences =
+                        applicationContext.getSharedPreferences("TASK_ID", 0)
+                    mSharedPreferences?.edit()?.remove("userid")?.commit()
+                    finish()
                 }
               /*  R.id.navItemSent -> {
                     toolbar.title = getString(R.string.sent)
