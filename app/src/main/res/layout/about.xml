@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:background="#FAFAFA"
+        android:layout_gravity="center"
+        android:gravity="center"
+        app:title="About"
+        app:navigationIcon="@drawable/ic_keyboard_arrow_left_black_24dp"
+        app:titleTextColor="@color/black"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:layout_constraintTop_toTopOf="@+id/fragment_container1"/>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="About TaxiMoh"
+                android:textColor="#000"
+                android:layout_marginTop="@dimen/dim_30"
+                android:layout_marginLeft="@dimen/dim_30"
+                android:textStyle="bold"
+                android:textSize="25sp"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@+id/image"
+                >
+
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="App version - 1.0.0"
+                android:textColor="#000"
+                android:layout_marginLeft="@dimen/dim_30"
+                android:textSize="20sp"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@+id/image"
+                >
+
+            </TextView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="@dimen/dim_30"
+                android:layout_marginRight="@dimen/dim_20"
+
+                android:layout_marginTop="@dimen/dim_10"
+                android:background="#000"></View>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:padding="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/dim_50"
+                    android:layout_height="@dimen/dim_50"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="20dp"
+                    android:src="@drawable/privacy_icon">
+
+                </ImageView>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="30dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Additional Information"
+                        android:id="@+id/tfare"
+                        android:textColor="#000"
+                        android:textSize="18sp"
+                        android:layout_marginRight="5dp"
+                        android:layout_toLeftOf="@+id/image"
+                        >
+
+                    </TextView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Privacy,Terms &amp; Condition and other information"
+                        android:layout_marginTop="5dp"
+                        android:textSize="16sp"
+                        android:layout_marginRight="5dp"
+                        android:layout_toLeftOf="@+id/image"
+                        >
+
+                    </TextView>
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:text="Terms And Condition"
+                android:textColor="#000"
+                android:layout_marginLeft="@dimen/dim_20"
+                android:textSize="18sp"
+                android:layout_marginTop="@dimen/dim_20"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@+id/image"
+                >
+
+            </TextView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="@dimen/dim_40"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dim_10"
+                android:background="#000"></View>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:text="Privacy Policy"
+                android:textColor="#000"
+                android:textSize="18sp"
+                android:layout_marginTop="@dimen/dim_10"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@+id/image"
+                >
+
+            </TextView>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>
+

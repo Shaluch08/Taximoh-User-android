@@ -164,7 +164,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/pwd"
                     android:gravity="top"
-                    android:inputType="numberPassword"
+                    android:inputType="textPassword"
                     android:singleLine="true"
                     >
 
@@ -183,7 +183,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/cpwd"
                     android:gravity="top"
-                    android:inputType="numberPassword"
+                    android:inputType="textPassword"
                     android:singleLine="true"
                     >
 

@@ -34,7 +34,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:fitsSystemWindows="true"
-                android:layout_height="150dp"
+                android:layout_height="80dp"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/woman"/>
             <LinearLayout
@@ -64,7 +64,9 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/name"
                         android:text="Name"
-                        android:inputType="textEmailAddress"
+                        android:focusableInTouchMode="false"
+                        android:focusable="true"
+                        android:inputType="text"
                         android:singleLine="true"
                         >
 
@@ -98,9 +100,11 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:id="@+id/email"
                         android:text="email"
                         android:inputType="textEmailAddress"
+                        android:focusableInTouchMode="false"
+                        android:focusable="true"
                         android:singleLine="true"
                         >
 
@@ -134,9 +138,11 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:id="@+id/gender"
                         android:text="female"
-                        android:inputType="textEmailAddress"
+                        android:inputType="text"
+                        android:focusableInTouchMode="false"
+                        android:focusable="true"
                         android:singleLine="true"
                         >
 
@@ -170,9 +176,10 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                         android:id="@+id/dob"
                         android:text="08-12-1997"
-                        android:inputType="textEmailAddress"
+                        android:focusableInTouchMode="false"
+                        android:focusable="true"
                         android:singleLine="true"
                         >
 
@@ -186,6 +193,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:padding="10dp"
+                android:visibility="gone"
+
                 android:orientation="horizontal">
 
                 <ImageView
@@ -243,9 +252,11 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                         android:id="@+id/contact"
                         android:text="765756997"
-                        android:inputType="textEmailAddress"
+                        android:inputType="number"
+                        android:focusableInTouchMode="false"
+                        android:focusable="true"
                         android:singleLine="true"
                         >
 
@@ -279,11 +290,13 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:id="@+id/address"
 
                         android:text="New Delhi"
-                        android:inputType="textEmailAddress"
-                        android:singleLine="true"
-                        >
+                        android:inputType="text"
+                        android:focusableInTouchMode="false"
+                        android:focusable="true"
+                        android:singleLine="true"                        >
 
                     </com.google.android.material.textfield.TextInputEditText>
 

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.uveous.taximohdriver.TravelDashboard
 
 class Splash : AppCompatActivity(){
 
@@ -28,6 +29,6 @@ class Splash : AppCompatActivity(){
                 startActivity(intent)
             }
 
-        }, 3000)
+        }, 5000)
     }
 }

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        app:cardElevation="4dp"
+        android:id="@+id/card1"
+        app:cardCornerRadius="2dp"
+        app:cardUseCompatPadding="false"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/dim_30"
+                    android:layout_height="@dimen/dim_30"
+                    android:id="@+id/image"
+                    android:src="@drawable/bike_icon">
+
+                </ImageView>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:id="@+id/rel"
+                    android:layout_toLeftOf="@+id/image"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_gravity="top"
+                            android:gravity="right|end"
+                            android:layout_toLeftOf="@+id/rel"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:id="@+id/fare"
+                                android:textColor="#000"
+                                android:text="154">
+
+                            </TextView>
+
+
+
+                        </RelativeLayout>
+
+
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textColor="#000"
+                        android:id="@+id/time"
+                        android:text="Wed, Sept 01,07:40 AM">
+
+                    </TextView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:id="@+id/ll"
+                        android:orientation="horizontal"
+                        android:layout_below="@+id/time"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:layout_marginTop="5dp"
+                            android:textColor="#000"
+                            android:layout_weight="1"
+                            android:id="@+id/vechileno"
+                            android:text="Mini.CRN 642734672">
+
+                        </TextView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:layout_marginTop="5dp"
+                            android:textColor="#000"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:id="@+id/status"
+                            android:text="new">
+
+                        </TextView>
+
+                    </LinearLayout>
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_below="@+id/ll"
+                        android:id="@+id/originlayout"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:layout_width="@dimen/dim_10"
+                                    android:layout_height="@dimen/dim_10"
+                                    android:layout_marginTop="10dp"
+                                    android:src="@drawable/ic_baseline_brightness_1_24"
+                                    app:tint="#16F14C" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginLeft="@dimen/dim_10"
+                                    android:text="Origin"
+                                    android:id="@+id/origin"
+                                    >
+
+
+                                </TextView>
+                            </LinearLayout>
+
+                          <LinearLayout
+                              android:layout_width="wrap_content"
+                              android:layout_marginTop="5dp"
+                              android:layout_height="wrap_content">
+
+                              <ImageView
+                                  android:layout_width="@dimen/dim_10"
+                                  android:layout_height="@dimen/dim_10"
+                                  android:layout_marginTop="10dp"
+                                  android:src="@drawable/ic_baseline_brightness_1_24"
+                                  app:tint="#E11D1D" />
+                              <TextView
+                                  android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:layout_marginTop="5dp"
+                                  android:text="Destination"
+                                  android:layout_marginLeft="@dimen/dim_10"
+                                  android:id="@+id/destination"
+                                  android:layout_below="@+id/origin">
+
+
+                              </TextView>
+                          </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="@dimen/dim_30"
+                            android:layout_height="@dimen/dim_30"
+                            android:id="@+id/image11"
+                            android:visibility="visible"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/taxidriver">
+
+                        </ImageView>
+                    </LinearLayout>
+
+
+
+
+
+
+
+                </RelativeLayout>
+
+
+
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

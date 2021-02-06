@@ -2,6 +2,7 @@
     <string name="app_name">TAXIMOH</string>
     <string name="drawerOpen">Open</string>
     <string name="drawerClose">Close</string>
-    <string name="google_maps_key">AIzaSyAqp3wbBhtOg9f4hmxNbRZm_ZITPS8fQ8I
+    <string name="google_maps_key">AIzaSyD8UzxFsaAYwR0ZenE3v_zAg10ZuPov72w
     </string>
+    <string name="date_format">yyyy-MM-dd</string>
 </resources>

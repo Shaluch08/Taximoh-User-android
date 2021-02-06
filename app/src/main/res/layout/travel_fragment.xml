@@ -16,27 +16,31 @@
             android:layout_width="match_parent"
             android:layout_gravity="center_horizontal"
             android:layout_height="wrap_content">
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/etpickup"
                 android:hint="Origin"
-                android:background="@drawable/back"
                 android:layout_width="match_parent"
-                android:textColor="#000"
-                android:padding="10dp"
+                android:layout_height="40dp"
                 android:layout_margin="10dp"
-                android:layout_height="wrap_content" />
-
-            <EditText
-                android:layout_below="@+id/etpickup"
-                android:hint="Destination"
-                android:background="@drawable/back"
-                android:textColor="#000"
                 android:padding="10dp"
+                android:gravity="start"
+                android:background="@drawable/back"
+                android:textSize="15dp" />
+
+            <AutoCompleteTextView
+                android:id="@+id/destination"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:padding="10dp"
+                android:gravity="start"
+                android:layout_below="@+id/etpickup"
+                android:background="@drawable/back"
+                android:hint="Destination"
+                android:textSize="15dp" />
+
+
         </RelativeLayout>
 
         <LinearLayout
@@ -56,14 +60,14 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/trip_icon">
 
                 </ImageView>
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_marginLeft="20dp"
                     android:src="@drawable/bike_icon">
 

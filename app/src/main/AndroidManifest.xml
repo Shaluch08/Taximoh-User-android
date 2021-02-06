@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.uveous.loopfoonpay">
-
-    <uses-permission
-        android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
 
     <application
         android:allowBackup="true"
@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LoopfoonPay">
-        <activity android:name=".SignUp" android:windowSoftInputMode="stateHidden">
+        <activity android:name=".SignUp" android:windowSoftInputMode="stateHidden"  android:screenOrientation="portrait">
 
         </activity>
 
@@ -21,22 +21,32 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".LoginActivity" android:windowSoftInputMode="stateHidden">
+        <activity android:name=".LoginActivity" android:windowSoftInputMode="stateHidden"  android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity"  android:screenOrientation="portrait"></activity>
         <activity android:name=".ForgotActivity" />
-        <activity android:name=".TravelDashboard" />
-        <activity android:name=".Trip" />
-        <activity android:name=".TripDetail" />
-        <activity android:name=".ProfileDetail" />
-        <activity android:name=".Splash" >
+
+        <activity android:name=".Trip"  android:screenOrientation="portrait" />
+        <activity android:name=".TripDetail"  android:screenOrientation="portrait"/>
+        <activity android:name=".ProfileDetail"  android:screenOrientation="portrait" android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".Splash"  android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Destination"  android:screenOrientation="portrait"/>
+        <activity android:name="com.uveous.taximohdriver.TravelDashboard"  android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Ride"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".RequestRide"  android:screenOrientation="portrait"/>
+        <activity android:name=".DriverDetails"  android:screenOrientation="portrait"/>
+        <activity android:name=".About" android:screenOrientation="portrait"/>
+        <activity android:name=".Support" android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -21,6 +21,9 @@ data class usersignup(
    @SerializedName("status")
     val status: Int? = null,
     @SerializedName("user_id")
-    val user_id: Int? = null
+    val user_id: Int? = null,
 
+        @SerializedName("msg")
+val msg: String? = null,   @SerializedName("api_token")
+    val api_token: String? = null
 )
