@@ -8,6 +8,8 @@ data class Driverdetail (
     var status:Int,
     @SerializedName("request_log_id")
     val request_log_id: Int? = null,
+    @SerializedName("driver_id")
+    val driver_id: Int? = null,
     @SerializedName("currency")
     val currency: String? = null,
  @SerializedName("origin_address")
@@ -25,6 +27,8 @@ data class Driverdetail (
     @SerializedName("vehicle_number")
     val vehicle_number: String? = null ,
     @SerializedName("profile_photo")
-    val profile_photo: String? = null
+    val profile_photo: String? = null,
+    @SerializedName("valid_otp")
+    val valid_otp: String? = null
 )
 

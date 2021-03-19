@@ -63,12 +63,11 @@ class SessionManager (context: Context) {
     }
 
     fun logoutUser() {
-        prefs.edit().clear()
-        prefs.edit().remove(USER_TOKEN)
-        prefs.edit().remove(USER_PHONENO)
-        prefs.edit().remove(USER_ID)
-        prefs.edit().remove(USER_NAME)
-        prefs.edit().commit()
+        prefs?.edit()?.remove(USER_TOKEN)?.commit()
+        prefs?.edit()?.remove(USER_PHONENO)?.commit()
+        prefs?.edit()?.remove(USER_ID)?.commit()
+        prefs?.edit()?.remove(USER_NAME)?.commit()
+
     }
 
 }

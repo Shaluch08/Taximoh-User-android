@@ -37,6 +37,7 @@ import java.util.*
 class SignUp : AppCompatActivity() ,LocationListener{
     lateinit var dob: TextInputEditText
     lateinit var name: TextInputEditText
+    lateinit var lname: TextInputEditText
     lateinit var email: TextInputEditText
     lateinit var phone: TextInputEditText
     lateinit var pwd: TextInputEditText
@@ -54,6 +55,7 @@ class SignUp : AppCompatActivity() ,LocationListener{
 
         dob=findViewById(R.id.dob)
         name=findViewById(R.id.name)
+        lname=findViewById(R.id.lname)
         email=findViewById(R.id.email)
         phone=findViewById(R.id.phone)
         pwd=findViewById(R.id.pwd)
@@ -103,7 +105,9 @@ class SignUp : AppCompatActivity() ,LocationListener{
         }else if(phone.text.toString().isEmpty()){
             Toast.makeText(this@SignUp,"Please enter phone number", Toast.LENGTH_SHORT).show()
         }else if(name.text.toString().isEmpty()){
-            Toast.makeText(this@SignUp,"Please enter name", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@SignUp,"Please enter first name", Toast.LENGTH_SHORT).show()
+        }else if(lname.text.toString().isEmpty()){
+            Toast.makeText(this@SignUp,"Please enter last name", Toast.LENGTH_SHORT).show()
         }else if(dob.text.toString().isEmpty()){
             Toast.makeText(this@SignUp,"Please select dob", Toast.LENGTH_SHORT).show()
         }else if(gender.isEmpty()){
@@ -113,6 +117,7 @@ class SignUp : AppCompatActivity() ,LocationListener{
         }else if(!cpwd.text.toString().equals(pwd.text.toString())){
             Toast.makeText(this@SignUp,"Please enter correct confirm password", Toast.LENGTH_SHORT).show()
         }else {
+            try{
             val progressDialog = ProgressDialog(this@SignUp)
             // progressDialog.setTitle("Kotlin Progress Bar")
             progressDialog.setMessage("Please wait")
@@ -121,7 +126,7 @@ class SignUp : AppCompatActivity() ,LocationListener{
             var mAPIService: ApiService? = null
             mAPIService = ApiClient.apiService
             mAPIService!!.register(
-                name.text.toString(),
+                name.text.toString(), lname.text.toString(),
                 phone.text.toString(),
                 email.text.toString(),
                 gender,
@@ -148,9 +153,8 @@ class SignUp : AppCompatActivity() ,LocationListener{
                             prefsEditor.commit()
                             Toast.makeText(this@SignUp, "Register", Toast.LENGTH_SHORT).show()
                             Log.v("dd", "post registration to API" + response.body()!!.toString())
-                            fn_permission()
-                            statusCheck()
-
+                            val Intent = Intent(applicationContext, TravelDashboard::class.java)
+                            startActivity(Intent)
                         }else{
                             progressDialog.dismiss()
                             Toast.makeText(this@SignUp,lo.msg, Toast.LENGTH_SHORT).show()
@@ -163,7 +167,11 @@ class SignUp : AppCompatActivity() ,LocationListener{
                     Toast.makeText(this@SignUp, t.message, Toast.LENGTH_SHORT).show()
                 }
             })
+            }catch (e:java.lang.Exception){
+
+            }
         }
+
     }
 
     fun statusCheck() {
@@ -172,8 +180,7 @@ class SignUp : AppCompatActivity() ,LocationListener{
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps()
         }else{
-            val Intent = Intent(applicationContext, TravelDashboard::class.java)
-            startActivity(Intent)
+
         }
     }
 

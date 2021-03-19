@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:background="#FAFAFA"
+        android:layout_gravity="center"
+        android:gravity="center"
+        app:title="Invite Friend"
+        app:navigationIcon="@drawable/ic_keyboard_arrow_left_black_24dp"
+        app:titleTextColor="@color/black"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:layout_constraintTop_toTopOf="@+id/fragment_container1"/>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:src="@drawable/invite_banner"
+                android:layout_height="200dp">
+
+            </ImageView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:padding="15dp"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="@dimen/dim_25"
+                android:text="Invite your friends and get 50 each"
+                android:layout_height="wrap_content">
+
+            </TextView>
+            <TextView
+                android:layout_width="match_parent"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="@dimen/dim_15"
+                android:text="Share the code below or ask them to enter it after they sign up. Your coupon will appear after first ride."
+                android:layout_height="wrap_content">
+
+            </TextView>
+            <TextView
+                android:layout_width="match_parent"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="@dimen/dim_15"
+                android:text=" For your friend to receive their coupon, ensure that they use your referral before their first ride and within 30 days of sign up."
+                android:layout_height="wrap_content">
+
+            </TextView>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/back"
+                android:padding="@dimen/dim_10"
+                android:layout_margin="@dimen/dim_20"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:padding="5dp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginLeft="@dimen/dim_20"
+                    android:text="TAXIMOH#!@#"
+                    android:textSize="@dimen/dim_20"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:padding="5dp"
+                    android:textColor="#2979FF"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_alignParentRight="true"
+                    android:text="Copy Code"
+                    android:layout_marginRight="@dimen/dim_20"
+                    android:textSize="@dimen/dim_15"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+
+            </RelativeLayout>
+        </LinearLayout>
+
+
+    </ScrollView>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cancel"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:textColor="@android:color/white"
+        android:text="Invite friends"
+        android:textAllCaps="false"
+        android:textSize="@dimen/dim_20"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/dim_20"
+        android:layout_gravity="center"/>
+
+
+</RelativeLayout>
+

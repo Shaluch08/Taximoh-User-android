@@ -29,6 +29,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/show"
+            android:visibility="visible"
             android:orientation="vertical">
 
 
@@ -36,6 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
 
                     <fragment
                         android:id="@+id/map"
@@ -48,7 +51,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
-                        android:layout_margin="15dp"
+                        android:layout_margin="10dp"
+                        android:gravity="center"
                         android:layout_height="wrap_content">
 
 
@@ -57,8 +61,8 @@
                             android:layout_height="@dimen/dim_30"
                             android:text=""
                             android:textColor="#000"
-                            android:textSize="16sp"
-                            android:layout_marginLeft="@dimen/dim_20"
+                            android:id="@+id/driverimage"
+                            android:layout_marginLeft="@dimen/dim_10"
                             android:src="@drawable/taxidriver"
 
                             >
@@ -69,8 +73,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:gravity="center"
                             android:layout_weight="1">
-                            <ImageView
+                            <RatingBar
+                                android:id="@+id/simpleRatingBar"
+                                android:layout_width="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_height="wrap_content"
+                                />
+                     <!--       <ImageView
                                 android:layout_width="@dimen/dim_20"
                                 android:layout_height="@dimen/dim_20"
                                 android:text=""
@@ -135,11 +146,17 @@
                                 >
 
 
-                            </ImageView>
+                            </ImageView>-->
 
                         </LinearLayout>
 
-
+                        <ImageView
+                            android:layout_width="@dimen/dim_50"
+                            android:layout_height="@dimen/dim_50"
+                            android:src="@drawable/cancel_stamp"
+                            android:visibility="gone"
+                            android:id="@+id/cancel"
+                            ></ImageView>
                         <TextView
                             android:id="@+id/status"
                             android:layout_width="wrap_content"
@@ -253,7 +270,6 @@
                                 android:layout_height="wrap_content"
                                 android:text="Origin"
                                 android:layout_gravity="center"
-                                android:gravity="center"
                                 android:layout_marginLeft="@dimen/dim_10"
                                 android:id="@+id/origin"
                                 >
@@ -295,6 +311,122 @@
 
 
                     </View>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:padding="10dp"
+                        android:id="@+id/driver"
+                        android:visibility="gone"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Driver Details"
+                        android:textColor="#000"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:textSize="18sp"
+                        android:layout_marginRight="5dp"
+                        >
+
+                    </TextView>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Name"
+                                android:padding="10dp"
+                                android:background="@drawable/background"
+                                android:textColor="#000"
+                                android:id="@+id/otp"
+                                android:textSize="16sp"
+
+                                >
+
+
+                            </TextView>
+                        </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="15dp"
+                        android:layout_height="wrap_content">
+
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Name"
+                            android:textColor="#000"
+                            android:textSize="16sp"
+                            android:layout_weight="1"
+                            >
+
+
+                        </TextView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_below="@+id/origin"
+                            android:text="name"
+                            android:id="@+id/dname"
+                            android:textColor="#000"
+                            android:textSize="16sp">
+
+
+                        </TextView>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        android:layout_height="wrap_content">
+
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mobile No."
+                            android:textColor="#000"
+                            android:textSize="16sp"
+                            android:layout_weight="1"
+                            >
+
+
+                        </TextView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#000"
+                            android:textSize="16sp"
+                            android:text="$2"
+                            android:id="@+id/dnumber"
+                            android:layout_below="@+id/origin">
+
+
+                        </TextView>
+                    </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#000">
+
+
+                    </View>
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -473,7 +605,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Payment"
+                        android:text="Payment Mode"
                         android:textColor="#000"
                         android:textSize="18sp"
                         android:textStyle="bold"

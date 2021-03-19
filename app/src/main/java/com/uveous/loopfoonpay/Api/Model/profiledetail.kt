@@ -10,8 +10,10 @@ data class profiledetail (
     val user_id: Int? = null,
     @SerializedName("msg")
     val msg: String? = null,
- @SerializedName("name")
-    val name: String? = null,
+  @SerializedName("first_name")
+    val first_name: String? = null,
+    @SerializedName("last_name")
+    val last_name: String? = null,
     @SerializedName("mobile")
     val mobile: String? = null,
     @SerializedName("email")

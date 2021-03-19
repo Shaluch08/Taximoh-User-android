@@ -48,20 +48,18 @@ import java.util.*
 class RequestRide :AppCompatActivity(), OnMapReadyCallback
 {
     private var pDialog: ProgressDialog? = null
-
     // Progress dialog type (0 - for Horizontal progress bar)
     val progress_bar_type = 0
     var destLatLng1: LatLng? = null
-
     public lateinit var infocar: ImageView
     public lateinit var infobike: ImageView
-    public lateinit var timedate: ImageView
+    public lateinit var timedate: AppCompatButton
     public lateinit var linearcar: LinearLayout
     public lateinit var linearbike: LinearLayout
     public lateinit var progress: LinearLayout
     public lateinit var carprice: TextView
     public lateinit var bikeprice: TextView
-    public lateinit var request: TextView
+    public lateinit var request: AppCompatButton
     public lateinit var textcar: TextView
     public lateinit var originaddress1: TextView
     public lateinit var destination: TextView
@@ -87,6 +85,7 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
     var status1 = 0
     var timer = 0
     val handler = Handler()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.requestride)
@@ -202,13 +201,7 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
                      Toast.makeText(this,"Please select type",Toast.LENGTH_LONG).show()
                  }else{
 
-                   /*  pDialog =  ProgressDialog(this);
-                     pDialog!!.setMessage("Please wait while booking...");
-                     pDialog!!.setIndeterminate(false);
-                     pDialog!!.setMax(100);
-                     pDialog!!.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                     pDialog!!.setCancelable(true);
-                     pDialog!!.show();*/
+                     try{
                      Log.v("dest",distance)
 
 
@@ -288,7 +281,9 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
                      }
 
 
+                     } catch (e: java.lang.Exception) {
 
+                     }
 
                  }
         })
@@ -298,6 +293,7 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
             builder.setNegativeButton("No") { dialog, which -> dialog.dismiss() }.
             setPositiveButton("Yes") { dialog, which -> // Constants.ACTIVITY_NAME=Constants.HOME_ACTIVITY;
 
+                try{
                 val progressDialog = ProgressDialog(this@RequestRide)
                 // progressDialog.setTitle("Kotlin Progress Bar")
                 progressDialog.setMessage("Please wait")
@@ -328,7 +324,11 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
                         Toast.makeText(this@RequestRide, t.message, Toast.LENGTH_SHORT).show()
                     }
                 })
+                }catch (e:java.lang.Exception){
+
+                }
             }
+
 
             val dialog = builder.create()
             dialog.show()
@@ -345,56 +345,80 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
         datetime.setText(datetext +" , "+ timetext)
     }
 
-   fun getdriverdetail(){
-       var mAPIService: ApiService? = null
-       mAPIService = ApiClient.apiService
-       mAPIService!!.getdriverdetails(
-           "Bearer "+ sessionManager.fetchAuthToken(),
-           lo1.request_id,sessionManager.fetchuserid()!!
-       ).enqueue(object : Callback<Driverdetail> {
-           override fun onResponse(call: Call<Driverdetail>, response: Response<Driverdetail>) {
-               Log.i("", "post submitted to API." + response.body()!!)
-               if (response.isSuccessful()) {
-                   Log.v("vvv", response.body().toString()!!)
-                   var lo : Driverdetail = response.body()!!
-                   if (lo.status == 200) {
-                       val intent = Intent(this@RequestRide,DriverDetails::class.java).putExtra("requestid",lo1.request_id)
-                       intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                       startActivity(intent)
-                   } else {
+   fun getdriverdetail() {
+       try {
+           var mAPIService: ApiService? = null
+           mAPIService = ApiClient.apiService
+           mAPIService!!.getdriverdetails(
+               "Bearer " + sessionManager.fetchAuthToken(),
+               lo1.request_id, sessionManager.fetchuserid()!!
+           ).enqueue(object : Callback<Driverdetail> {
+               override fun onResponse(call: Call<Driverdetail>, response: Response<Driverdetail>) {
+                   Log.i("", "post submitted to API." + response.body()!!)
+                   if (response.isSuccessful()) {
+                       Log.v("vvv", response.body().toString()!!)
+                       var lo: Driverdetail = response.body()!!
+                       if (lo.status == 200) {
+                           val intent = Intent(
+                               this@RequestRide,
+                               DriverDetails::class.java
+                           ).putExtra("requestid", lo1.request_id)
+                               .putExtra("destinationadd", lo.destination_address)
+                           intent.flags =
+                               Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                           startActivity(intent)
+                       } else {
 
-                       var mAPIService: ApiService? = null
-                       mAPIService = ApiClient.apiService
-                       mAPIService!!.cancel("Bearer "+ sessionManager.fetchAuthToken(),lo1.request_id, sessionManager.fetchuserid()!!).enqueue(object :
-                               Callback<cancelride> {
-                           override fun onResponse(call: Call<cancelride>, response: Response<cancelride>) {
-                               Log.i("", "post submitted to API." + response.body()!!)
-                               if (response.isSuccessful()) {
-                                   var lo: cancelride = response.body()!!
+                           try {
+                               var mAPIService: ApiService? = null
+                               mAPIService = ApiClient.apiService
+                               mAPIService!!.cancel(
+                                   "Bearer " + sessionManager.fetchAuthToken(),
+                                   lo1.request_id,
+                                   sessionManager.fetchuserid()!!
+                               ).enqueue(object :
+                                   Callback<cancelride> {
+                                   override fun onResponse(
+                                       call: Call<cancelride>,
+                                       response: Response<cancelride>
+                                   ) {
+                                       Log.i("", "post submitted to API." + response.body()!!)
+                                       if (response.isSuccessful()) {
+                                           var lo: cancelride = response.body()!!
 
-                               }
+                                       }
+                                   }
+
+                                   override fun onFailure(call: Call<cancelride>, t: Throwable) {
+                                       Toast.makeText(
+                                           this@RequestRide,
+                                           t.message,
+                                           Toast.LENGTH_SHORT
+                                       ).show()
+                                   }
+                               })
+                           } catch (e: java.lang.Exception) {
+
                            }
+                           showDialog("No drivers available in your area.Please check after sometime.")
+                       }
 
-                           override fun onFailure(call: Call<cancelride>, t: Throwable) {
-                               Toast.makeText(this@RequestRide, t.message, Toast.LENGTH_SHORT).show()
-                           }
-                       })
-
-                       showDialog("No drivers available in your area.Please check after sometime.")
                    }
-
                }
-           }
 
-           override fun onFailure(call: Call<Driverdetail>, t: Throwable) {
-               Toast.makeText(this@RequestRide, t.message, Toast.LENGTH_SHORT).show()
-           }
-       })
+               override fun onFailure(call: Call<Driverdetail>, t: Throwable) {
+                   Toast.makeText(this@RequestRide, t.message, Toast.LENGTH_SHORT).show()
+               }
+           })
 
+       } catch (e: java.lang.Exception) {
+
+       }
    }
 
 
     fun getProgressStatus(){
+        try{
        var mAPIService: ApiService? = null
        mAPIService = ApiClient.apiService
        mAPIService!!.getstatus(
@@ -418,10 +442,11 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
                            }
                        }else{
 
-                            if(timer==90){
+                            if(timer==200){
                                 handler.removeCallbacksAndMessages(null)
                                 progress.visibility= GONE
                                 status1=100
+                                try{
 
                                 var mAPIService: ApiService? = null
                                 mAPIService = ApiClient.apiService
@@ -439,6 +464,9 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
                                         Toast.makeText(this@RequestRide, t.message, Toast.LENGTH_SHORT).show()
                                     }
                                 })
+                                }catch (e:java.lang.Exception){
+
+                                }
                                 showDialog("No drivers available in your area.Please check after sometime.")
                             }
                        }
@@ -454,27 +482,34 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
                Toast.makeText(this@RequestRide, t.message, Toast.LENGTH_SHORT).show()
            }
        })
-
-   }
-    private fun showDialog(text:String) {
-        val dialog = Dialog(this@RequestRide)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.place_layout)
-        val yesBtn = dialog.findViewById(R.id.tv_ok_thanks) as TextView
-        val tv_message_thanks = dialog.findViewById(R.id.tv_message_thanks) as TextView
-        tv_message_thanks.setText(text)
-        yesBtn.setOnClickListener {
-            dialog.dismiss()
-            val intent = Intent(this@RequestRide, TravelDashboard::class.java)
-            //    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-         //   finish()
+        } catch (e: java.lang.Exception) {
 
         }
 
-        dialog.show()
+   }
+    private fun showDialog(text:String) {
+        try {
+            val dialog = Dialog(this@RequestRide)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setCancelable(false)
+            dialog.setContentView(R.layout.place_layout)
+            val yesBtn = dialog.findViewById(R.id.tv_ok_thanks) as TextView
+            val tv_message_thanks = dialog.findViewById(R.id.tv_message_thanks) as TextView
+            tv_message_thanks.setText(text)
+            yesBtn.setOnClickListener {
+                dialog.dismiss()
+                val intent = Intent(this@RequestRide, TravelDashboard::class.java)
+                //    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                //   finish()
 
+            }
+
+            dialog.show()
+        }catch (e:java.lang.Exception){
+
+
+        }
     }
 
     override fun onRestart() {
@@ -525,6 +560,7 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
     }
     private fun senddistance() {
 
+        try{
         val progressDialog = ProgressDialog(this)
         // progressDialog.setTitle("Kotlin Progress Bar")
         progressDialog.setMessage("Please wait")
@@ -560,6 +596,9 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
                 Toast.makeText(this@RequestRide, t.message, Toast.LENGTH_SHORT).show()
             }
         })
+        }catch (e:java.lang.Exception){
+
+        }
     }
 
 

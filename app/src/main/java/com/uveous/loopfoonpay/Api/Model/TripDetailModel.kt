@@ -11,6 +11,8 @@ var status:Int,
 var currency: String,
 @SerializedName("request_id")
  var request_id:Int,
+@SerializedName("request_log_id")
+ var request_log_id:Int,
 @SerializedName("request_date")
 var request_date:String,
 @SerializedName("request_time")
@@ -36,6 +38,18 @@ var request_status:String,
 @SerializedName("tax")
 var tax:String,
 @SerializedName("km_price")
-var km_price:String
+var km_price:String,
+@SerializedName("profile_photo")
+var profile_photo:String,
+@SerializedName("driver_name")
+var driver_name:String,
+@SerializedName("driver_mobile")
+var driver_mobile:String,
+@SerializedName("valid_otp")
+var valid_otp:String,
+@SerializedName("payment_method")
+var payment_method:String,
+@SerializedName("trip_rating")
+var trip_rating:String
 
 )

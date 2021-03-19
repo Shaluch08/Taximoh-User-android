@@ -15,7 +15,8 @@ class Support :  AppCompatActivity() {
         setContentView(R.layout.support)
         toolbar = findViewById(R.id.toolbar)
         toolbar.setNavigationOnClickListener(View.OnClickListener {
-            startActivity(Intent(this, TravelDashboard::class.java))
+            startActivity(Intent(this,TravelDashboard::class.java))
+
         })
 
 

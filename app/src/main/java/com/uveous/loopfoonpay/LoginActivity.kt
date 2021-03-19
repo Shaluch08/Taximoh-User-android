@@ -69,6 +69,7 @@ class LoginActivity : AppCompatActivity()  , LocationListener {
         }else if(pwd.text.toString().isEmpty()){
             Toast.makeText(this@LoginActivity,"Please enter password", Toast.LENGTH_SHORT).show()
         }else {
+            try{
             val progressDialog = ProgressDialog(this@LoginActivity)
             // progressDialog.setTitle("Kotlin Progress Bar")
             progressDialog.setMessage("Please wait")
@@ -99,9 +100,8 @@ class LoginActivity : AppCompatActivity()  , LocationListener {
                             prefsEditor.commit()
                             Toast.makeText(this@LoginActivity, "Login", Toast.LENGTH_SHORT).show()
                             Log.v("dd", "post registration to API" + response.body()!!.toString())
-                            fn_permission()
-                            statusCheck()
-
+                            val Intent = Intent(applicationContext, TravelDashboard::class.java)
+                            startActivity(Intent)
                         }else{
                             progressDialog.dismiss()
                             Toast.makeText(this@LoginActivity,lo.msg, Toast.LENGTH_SHORT).show()
@@ -114,6 +114,9 @@ class LoginActivity : AppCompatActivity()  , LocationListener {
                     Toast.makeText(this@LoginActivity, t.message, Toast.LENGTH_SHORT).show()
                 }
             })
+            }catch (e:java.lang.Exception){
+
+            }
 
         }
     }
@@ -124,8 +127,7 @@ class LoginActivity : AppCompatActivity()  , LocationListener {
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps()
         }else{
-            val Intent = Intent(applicationContext, TravelDashboard::class.java)
-            startActivity(Intent)
+
         }
     }
 

@@ -3,18 +3,16 @@ package com.uveous.taximohdriver
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.location.*
-import android.os.AsyncTask
-import android.os.Bundle
-import android.os.Handler
-import android.os.Message
+import android.location.Address
+import android.location.Geocoder
+import android.location.Location
+import android.net.Uri
+import android.os.*
 import android.provider.Settings
 import android.util.Log
 import android.view.Gravity
@@ -24,7 +22,10 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
@@ -33,12 +34,17 @@ import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.common.api.Status
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.PlacesClient
@@ -46,13 +52,26 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.navigation.NavigationView
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
+import com.mindorks.example.ubercaranimation.util.MapUtils
 import com.uveous.loopfoonpay.*
+import com.uveous.loopfoonpay.Api.ApiClient
+import com.uveous.loopfoonpay.Api.ApiService
 import com.uveous.loopfoonpay.Api.Model.GetPrice
+import com.uveous.loopfoonpay.Api.Model.profiledetail
 import com.uveous.loopfoonpay.Api.SessionManager
-import com.uveous.loopfoonpay.directionhelpers.TaskLoadedCallback
+import com.uveous.loopfoonpay.R
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
@@ -60,7 +79,8 @@ import java.net.ProtocolException
 import java.net.URL
 import java.util.*
 
-class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallback, TaskLoadedCallback {
+
+class TravelDashboard : AppCompatActivity()  , OnMapReadyCallback{
 
     var navigationPosition: Int = 0
     lateinit var drawerLayout : DrawerLayout;
@@ -70,7 +90,9 @@ class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallb
     public lateinit var destination: TextView
     public lateinit var car: ImageView
     public lateinit var bike: ImageView
+    public lateinit var currentlocation: ImageView
     public lateinit var infocar: ImageView
+    public lateinit var back: ImageView
     public lateinit var infobike: ImageView
     public lateinit var cardcar: CardView
     public lateinit var cardbike: CardView
@@ -90,216 +112,229 @@ class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallb
     var type :Int = 0
     lateinit var sheet_request_trip: LinearLayout
     lateinit var lo: GetPrice
+
+    private val UPDATE_INTERVAL_IN_MILLISECONDS: Long = 10000
+    private val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS: Long = 5000
+
+    private val REQUEST_CHECK_SETTINGS = 300
+    private var mFusedLocationClient: FusedLocationProviderClient? = null
+    private var mSettingsClient: SettingsClient? = null
+    private var mLocationRequest: LocationRequest? = null
+    private var mLocationSettingsRequest: LocationSettingsRequest? = null
+    private var mLocationCallback: LocationCallback? = null
+    private var mCurrentLocation: Location? = null
+    lateinit var Latlng1: LatLng
+    lateinit var Latlng2: LatLng
+    lateinit var Latlng3: LatLng
+    lateinit var Latlng4: LatLng
+    // boolean flag to toggle the ui
+    private var mRequestingLocationUpdates: Boolean? = null
     companion object{
 
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.travel_dashboard)
+
         if (!Places.isInitialized()) {
-            Places.initialize(this, getString(R.string.google_maps_key))
+            Places.initialize(this,
+                    getString(R.string.google_maps_key))
         }
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        mSettingsClient = LocationServices.getSettingsClient(this)
+
+        mLocationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
+                // location is received
+                mCurrentLocation = locationResult.lastLocation
+                if(etpickup.text.toString().contentEquals("Origin")) {
+                    updateLocationUI()
+                }
+            }
+        }
+        mRequestingLocationUpdates = false;
+
+        mLocationRequest = LocationRequest()
+        mLocationRequest!!.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS)
+        mLocationRequest!!.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS)
+        mLocationRequest!!.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+
+        val builder: LocationSettingsRequest.Builder = LocationSettingsRequest.Builder()
+        builder.addLocationRequest(mLocationRequest!!)
+        mLocationSettingsRequest = builder.build()
+
+        sessionManager = SessionManager(this)
+        Dexter.withActivity(this)
+            .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+            .withListener(object : PermissionListener {
+                override fun onPermissionGranted(response: PermissionGrantedResponse?) {
+                    mRequestingLocationUpdates = true
+                    startLocationUpdates()
+                }
+
+                override   fun onPermissionDenied(response: PermissionDeniedResponse) {
+                    if (response.isPermanentlyDenied()) {
+                        // open device settings when the permission is
+                        // denied permanently
+                        openSettings()
+                    }
+                }
+
+                override  fun onPermissionRationaleShouldBeShown(
+                    permission: PermissionRequest?,
+                    token: PermissionToken
+                ) {
+                    token.continuePermissionRequest()
+                }
+            }).check()
         val placesClient: PlacesClient = Places.createClient(this)
         initView()
-        sessionManager = SessionManager(this)
 
     }
-
-    fun statusCheck() {
-        val manager =
-                getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            buildAlertMessageNoGps()
+    override fun onResume() {
+        super.onResume()
+        if(etpickup.text.toString().contentEquals("Origin")) {
+            if (mRequestingLocationUpdates!! && checkPermissions()) {
+                updateLocationUI()
+            }
         }
+
     }
 
-    private fun buildAlertMessageNoGps() {
-        val builder: android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(this)
-        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
-                .setCancelable(false)
-                .setPositiveButton("Yes",
-                        DialogInterface.OnClickListener { dialog, id -> startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) })
-                .setNegativeButton("No",
-                        DialogInterface.OnClickListener { dialog, id -> dialog.cancel() })
-        val alert: android.app.AlertDialog? = builder.create()
-        alert!!.show()
+    private fun checkPermissions(): Boolean {
+        val permissionState = ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+        return permissionState == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun fn_permission() {
-        if (ContextCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                ) !== PackageManager.PERMISSION_GRANTED
-        ) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                            this,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                    )
-            ) {
+
+    override fun onPause() {
+        super.onPause()
+
+    }
+
+    private fun updateLocationUI() {
+        if (mCurrentLocation != null) {
+            val geocoder: Geocoder
+            val yourAddresses: List<Address>
+            geocoder = Geocoder(this, Locale.getDefault())
+            yourAddresses = geocoder.getFromLocation(mCurrentLocation!!.latitude,mCurrentLocation!!.longitude, 1)
+            try {
+                etpickup.setText("" + yourAddresses.get(0).getAddressLine(0))
+            }catch (e:java.lang.Exception){
+
+            }
+        /*    if(marker!=null){
+                marker!!.remove()
+                marker2!!.remove()
+                marker3!!.remove()
+                marker4!!.remove()
+                marker5!!.remove()
+                
+            }
+*/
+            startLatlng = LatLng(mCurrentLocation!!.latitude, mCurrentLocation!!.longitude)
+            if (marker == null) {
+                place1 = MarkerOptions().position(startLatlng!!).title("Origin") //new LatLng(27.658143, 85.3199503)
+                //new LatLng(27.667491, 85.3208583)
+                marker = mMap!!.addMarker(place1)
+                markers.add(marker!!)
+                marker!!.showInfoWindow()
+                /*  int padding = 50;
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                for (Marker marker : markers) {
+                    builder.include(marker.getPosition());
+                }
+                LatLngBounds bounds = builder.build();
+                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);*/
+                // mMap.moveCamera(cu);
+                mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(startLatlng, 16f))
+                Latlng1=LatLng(startLatlng!!.latitude+0.001,startLatlng!!.longitude+0.001)
+                marker2= addMarker(Latlng1)
+                Latlng2=LatLng(startLatlng!!.latitude+0.001,startLatlng!!.longitude-0.001)
+                marker3= addMarker(Latlng2)
+                Latlng3=LatLng(startLatlng!!.latitude-0.001,startLatlng!!.longitude-0.001)
+                marker4=addMarker(Latlng3)
+                Latlng4=LatLng(startLatlng!!.latitude+0.002,startLatlng!!.longitude-0.002)
+                marker5= addMarker(Latlng4)
             } else {
-                ActivityCompat.requestPermissions(
-                        this, arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                ),
-                        REQUEST_PERMISSIONS
-                )
+                marker!!.setPosition(startLatlng!!)
             }
-        } else {
-            boolean_permission = true
-            fn_getlocation()
+
         }
+
     }
 
-    override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<out String>,
-            grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            REQUEST_PERMISSIONS -> {
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    boolean_permission = true
-                    fn_getlocation()
-                    statusCheck()
-                } else {
-                    statusCheck()
-                    //Toast.makeText(HomeActivity.this, "Please allow the permission", Toast.LENGTH_LONG).show();
+
+    private fun addMarker(latLng: LatLng): Marker? {
+        val bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(MapUtils.getCarBitmap(this))
+        return mMap!!.addMarker(
+                MarkerOptions().position(latLng).flat(true).icon(bitmapDescriptor)
+        )
+    }
+
+    private fun startLocationUpdates() {
+        mSettingsClient!!.checkLocationSettings(mLocationSettingsRequest)
+            .addOnSuccessListener(this, object : OnSuccessListener<LocationSettingsResponse?> {
+                @SuppressLint("MissingPermission")
+                override fun onSuccess(locationSettingsResponse: LocationSettingsResponse?) {
+                 //   Log.i(FragmentActivity.TAG, "All location settings are satisfied.")
+                 /*   Toast.makeText(
+                        applicationContext,
+                        "Started location updates!",
+                        Toast.LENGTH_SHORT
+                    ).show()*/
+                    mFusedLocationClient!!.requestLocationUpdates(
+                        mLocationRequest,
+                        mLocationCallback, Looper.myLooper()
+                    )
+                    updateLocationUI()
                 }
-            }
-        }
-    }
+            })
+            .addOnFailureListener(this, object : OnFailureListener {
+                override fun onFailure(@NonNull e: java.lang.Exception) {
+                    val statusCode: Int = (e as ApiException).getStatusCode()
+                    when (statusCode) {
+                        LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
 
+                            try {
+                                // Show the dialog by calling startResolutionForResult(), and check the
+                                // result in onActivityResult().
+                                val rae: ResolvableApiException = e as ResolvableApiException
+                                rae.startResolutionForResult(
+                                    this@TravelDashboard,
+                                    REQUEST_CHECK_SETTINGS
+                                )
+                            } catch (sie: IntentSender.SendIntentException) {
 
-    var isGPSEnable = false
-    var isNetworkEnable = false
-    var latitude : Double= 0.0
-    var longitude:Double = 0.0
-    var locationManager: LocationManager? = null
-    var location: Location? = null
-    private val REQUEST_PERMISSIONS = 100
-
-    private val MY_REQUEST = 1001
-    var boolean_permission = false
-
-    private fun fn_getlocation() {
-        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-        isGPSEnable = locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        isNetworkEnable = locationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-        if (!isGPSEnable && !isNetworkEnable) {
-        } else {
-            if (isNetworkEnable) {
-                location = null
-                //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,);
-
-                if (locationManager != null) {
-                    if (ActivityCompat.checkSelfPermission(
-                                    this,
-                                    Manifest.permission.ACCESS_FINE_LOCATION
-                            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                                    this,
-                                    Manifest.permission.ACCESS_COARSE_LOCATION
-                            ) != PackageManager.PERMISSION_GRANTED
-                    ) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return
-                    }
-                    location =
-                            locationManager!!.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                    if (location != null) {
-                        Log.e("latitude", location!!.latitude.toString() + "")
-                        Log.e("longitude", location!!.longitude.toString() + "")
-                        latitude = location!!.latitude
-                        longitude = location!!.longitude
-                       PROVIDER = LocationManager.NETWORK_PROVIDER
-                        setMarker()
-                        startLatlng = LatLng(latitude, longitude)
-                        if (marker == null) {
-                            place1 = MarkerOptions().position(startLatlng!!).title("Origin") //new LatLng(27.658143, 85.3199503)
-                            //new LatLng(27.667491, 85.3208583)
-                            marker = mMap!!.addMarker(place1)
-                            markers.add(marker!!)
-                            marker!!.showInfoWindow()
-                            /*  int padding = 50;
-                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                            for (Marker marker : markers) {
-                                builder.include(marker.getPosition());
                             }
-                            LatLngBounds bounds = builder.build();
-                            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);*/
-                            // mMap.moveCamera(cu);
-                            mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(startLatlng, 16f))
-                        } else {
-                            marker!!.setPosition(startLatlng!!)
                         }
+                        LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
+                            val errorMessage =
+                                "Location settings are inadequate, and cannot be " +
+                                        "fixed here. Fix in Settings."
 
-                    }
-                }
-            } else if (isGPSEnable) {
-                location = null
-                if (ActivityCompat.checkSelfPermission(
-                                this,
-                                Manifest.permission.ACCESS_FINE_LOCATION
-                        ) !== PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                                this,
-                                Manifest.permission.ACCESS_COARSE_LOCATION
-                        ) !== PackageManager.PERMISSION_GRANTED
-                ) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return
-                }
-                locationManager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0f, this)
-                if (locationManager != null) {
-                    location = locationManager!!.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                    if (location != null) {
-                        Log.e("latitude", location!!.latitude.toString() + "")
-                        Log.e("longitude", location!!.longitude.toString() + "")
-                        latitude = location!!.latitude
-                        longitude = location!!.longitude
-                        // String distance=  UtilityFunction.calculateDistance(latitude,longitude,Double.parseDouble(locationPOJO.getLat()),Double.parseDouble(locationPOJO.getLong()),LocationManager.GPS_PROVIDER);
-                         PROVIDER = LocationManager.GPS_PROVIDER
-                        //   fn_update(location);
-                        // getNearPlaces();
-                        startLatlng = LatLng(latitude, longitude)
-                        setMarker()
-                        if (marker == null) {
-                            place1 = MarkerOptions().position(startLatlng!!).title("Origin") //new LatLng(27.658143, 85.3199503)
-                           //new LatLng(27.667491, 85.3208583)
-                            marker = mMap!!.addMarker(place1)
-                            markers.add(marker!!)
-                            marker!!.showInfoWindow()
-                            /*  int padding = 50;
-                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                            for (Marker marker : markers) {
-                                builder.include(marker.getPosition());
-                            }
-                            LatLngBounds bounds = builder.build();
-                            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);*/
-                            // mMap.moveCamera(cu);
-                            mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(startLatlng, 16f))
-                        } else {
-                            marker!!.setPosition(startLatlng!!)
                         }
-
                     }
+                    updateLocationUI()
                 }
-            }
-        }
+            })
     }
 
-
+    private fun openSettings() {
+        val intent = Intent()
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        val uri: Uri = Uri.fromParts(
+            "package",
+            BuildConfig.APPLICATION_ID, null
+        )
+        intent.data = uri
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+    }
 
     @SuppressLint("WrongConstant")
     private fun initView(){
@@ -309,13 +344,14 @@ class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallb
         toolbar.title = getString(R.string.app_name)
         setSupportActionBar(toolbar)
        // getSupportActionBar()!!.setDisplayShowTitleEnabled(false);
-        setUpDrawerLayout()
+        //setUpDrawerLayout()
 
         etpickup=findViewById(R.id.etpickup)
         sheet_request_trip=findViewById(R.id.sheet_request_trip)
         destination=findViewById(R.id.destination)
         car=findViewById(R.id.car)
         bike=findViewById(R.id.bike)
+        currentlocation=findViewById(R.id.currentlocation)
         cardcar=findViewById(R.id.cardcar)
         cardbike=findViewById(R.id.cardbike)
         ridenow=findViewById(R.id.ridenow)
@@ -327,8 +363,20 @@ class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallb
         distance1=findViewById(R.id.distance1)
         distance2=findViewById(R.id.distance)
         infocar=findViewById(R.id.infocar)
+        back=findViewById(R.id.back)
         infobike=findViewById(R.id.infobike)
         textcar=findViewById(R.id.textcar)
+
+        currentlocation.setOnClickListener(View.OnClickListener {
+            updateLocationUI()
+        })
+
+        back.setOnClickListener(View.OnClickListener {
+            navigationPosition = R.id.dashboard
+            navigationView.setCheckedItem(navigationPosition)
+
+            drawerLayout.openDrawer(Gravity.LEFT)
+        })
 
         etpickup.setOnClickListener(View.OnClickListener {
             val fields: List<Place.Field> = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG)
@@ -350,10 +398,6 @@ class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallb
 
         })
 
-     /*   linearcar.setOnClickListener { View.OnClickListener {
-
-            Log.v("Before1", type.toString())
-        } }*/
 
         linearcar.setOnTouchListener(OnTouchListener { view, motionEvent -> // Show an alert dialog.
             linearcar.setBackgroundColor(Color.parseColor("#DCDCDC"));
@@ -565,6 +609,11 @@ class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallb
               R.id.support -> {
                   startActivity(Intent(this@TravelDashboard, Support::class.java))
               }
+                R.id.offers -> {
+                  startActivity(Intent(this@TravelDashboard, Offers::class.java))
+              }   R.id.invitefriend -> {
+                  startActivity(Intent(this@TravelDashboard, InviteFriend::class.java))
+              }
             }
             // set item as selected to persist highlight
             menuItem.isChecked = true
@@ -588,7 +637,24 @@ class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallb
                 etpickup.setText(place.address.toString())
                 startLatlng=place.latLng
                 if(destination.text.toString().equals("Destination")){
+                    marker!!.remove()
+                 /*   marker2!!.remove()
+                    marker3!!.remove()
+                    marker4!!.remove()
+                    marker5!!.remove()*/
+                    place1 = MarkerOptions().position(startLatlng!!).title("Origin") //new LatLng(27.658143, 85.3199503)
+                    marker = mMap!!.addMarker(place1)
+                    marker!!.showInfoWindow()
+                    mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(startLatlng, 16f))
 
+                    Latlng1=LatLng(startLatlng!!.latitude+0.001,startLatlng!!.longitude+0.001)
+                    marker2= addMarker(Latlng1)
+                     Latlng2=LatLng(startLatlng!!.latitude+0.001,startLatlng!!.longitude-0.001)
+                    marker3= addMarker(Latlng2)
+                     Latlng3=LatLng(startLatlng!!.latitude-0.001,startLatlng!!.longitude-0.001)
+                    marker4=addMarker(Latlng3)
+                     Latlng4=LatLng(startLatlng!!.latitude+0.002,startLatlng!!.longitude-0.002)
+                    marker5= addMarker(Latlng4)
                 }else{
                     val loc1 = Location("one")
                     loc1.setLatitude(startLatlng!!.latitude)
@@ -596,7 +662,23 @@ class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallb
                     val loc2 = Location("two")
                     loc2.setLatitude(destLatLng!!.latitude)
                     loc2.setLongitude(destLatLng!!.longitude)
-                    distance= loc1.distanceTo(loc2).toString()
+                   // distance= loc1.distanceTo(loc2).toString()
+
+                    val earthRadius = 6371000.0 //meters
+
+                    val dLat = Math.toRadians(destLatLng!!.latitude - startLatlng!!.latitude)
+                    val dLng = Math.toRadians(destLatLng!!.longitude - startLatlng!!.longitude)
+                    val a =
+                        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                                Math.cos(Math.toRadians(startLatlng!!.latitude)) * Math.cos(
+                            Math.toRadians(destLatLng!!.latitude)
+                        ) *
+                                Math.sin(dLng / 2) * Math.sin(dLng / 2)
+                    val c =
+                        2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+                    val dist = (earthRadius * c).toFloat()
+                    distance=dist.toString()
+
                     startActivity(Intent(this, RequestRide::class.java).putExtra("destination",destination.text.toString())
                             .putExtra("origin",etpickup.text.toString())
                             .putExtra("type",type)
@@ -627,7 +709,23 @@ class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallb
                 val loc2 = Location("two")
                 loc2.setLatitude(destLatLng!!.latitude)
                 loc2.setLongitude(destLatLng!!.longitude)
-                distance= loc1.distanceTo(loc2).toString()
+            //    distance= loc1.distanceTo(loc2).toString()
+
+                val earthRadius = 6371000.0 //meters
+
+                val dLat = Math.toRadians(destLatLng!!.latitude - startLatlng!!.latitude)
+                val dLng = Math.toRadians(destLatLng!!.longitude - startLatlng!!.longitude)
+                val a =
+                    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                            Math.cos(Math.toRadians(startLatlng!!.latitude)) * Math.cos(
+                        Math.toRadians(destLatLng!!.latitude)
+                    ) *
+                            Math.sin(dLng / 2) * Math.sin(dLng / 2)
+                val c =
+                    2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+                val dist = (earthRadius * c).toFloat()
+                distance=dist.toString()
+
                 startActivity(Intent(this, RequestRide::class.java).putExtra("destination",destination.text.toString())
                         .putExtra("origin",etpickup.text.toString())
                         .putExtra("type",type)
@@ -646,6 +744,12 @@ class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallb
                 //status.getStatusMessage()?.let { Log.i(FragmentActivity.TAG, it) }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // The user canceled the operation.
+            }
+        }else if(requestCode==REQUEST_CHECK_SETTINGS){
+            if (resultCode == Activity.RESULT_OK) {
+
+            }else if (resultCode == Activity.RESULT_CANCELED) {
+                mRequestingLocationUpdates = false;
             }
         }
     }
@@ -766,7 +870,47 @@ class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallb
     }
 */
     private fun changeNavigationHeaderInfo() {
-        val headerView = navigationView.getHeaderView(0)
+     val headerView = navigationView.getHeaderView(0)
+     val name = headerView.findViewById(R.id.txtName) as TextView
+     val txtEmail = headerView.findViewById(R.id.txtEmail) as TextView
+     try{
+     var mAPIService: ApiService? = null
+     mAPIService = ApiClient.apiService
+     sessionManager.fetchuserid()?.let {
+         mAPIService!!.getprofile(
+                 "Bearer "+ sessionManager.fetchAuthToken(),
+                 it
+         ).enqueue(object : Callback<profiledetail> {
+             override fun onResponse(call: Call<profiledetail>, response: Response<profiledetail>) {
+                 Log.i("", "post submitted to API." + response.body()!!)
+                 if (response.isSuccessful()) {
+                     Log.v("vvv", response.body().toString()!!)
+                     var lo: profiledetail = response.body()!!
+                     if (lo.status == 200) {
+                         name.text=lo.first_name+lo.last_name
+                         txtEmail.text=lo.email
+
+
+                     } else {
+
+                         //  Toast.makeText(this@ProfileDetail, "not submiited", Toast.LENGTH_SHORT).show()
+                     }
+
+                 }
+             }
+
+             override fun onFailure(call: Call<profiledetail>, t: Throwable) {
+                 Toast.makeText(this@TravelDashboard, t.message, Toast.LENGTH_SHORT).show()
+             }
+         })
+     }
+
+     }catch (e:java.lang.Exception){
+
+     }
+
+
+
         headerView.setOnClickListener(View.OnClickListener {
             val i=Intent(this, ProfileDetail::class.java)
             startActivity(i)
@@ -807,39 +951,15 @@ class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallb
         }
     }
 
-    override fun onLocationChanged(location: Location) {
-        if (location != null) {
-            Log.e("latitude", location!!.latitude.toString() + "")
-            Log.e("longitude", location!!.longitude.toString() + "")
-            latitude = location!!.latitude
-            longitude = location!!.longitude
 
-        }
-    }
-
-    override fun onProviderEnabled(provider: String) {}
-
-    override fun onProviderDisabled(provider: String) {}
-
-    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
     override fun onMapReady(p0: GoogleMap?) {
         mMap = p0
         mMap!!.getUiSettings().setZoomControlsEnabled(true)
-        fn_permission()
-        statusCheck()
 
     }
 
     private fun setMarker() {
-        val geocoder: Geocoder
-        val yourAddresses: List<Address>
-        geocoder = Geocoder(this, Locale.getDefault())
-        yourAddresses = geocoder.getFromLocation(latitude,longitude, 1)
-        try {
-            etpickup.setText("" + yourAddresses.get(0).getAddressLine(0))
-        }catch (e:java.lang.Exception){
 
-        }
     }
 
     var destLatLng: LatLng? = null
@@ -849,6 +969,10 @@ class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallb
     private var currentPolyline: Polyline? = null
     var marker: Marker? = null
     var marker1: Marker? = null
+    var marker2: Marker? = null
+    var marker3: Marker? = null
+    var marker4: Marker? = null
+    var marker5: Marker? = null
     var markers: ArrayList<Marker> = java.util.ArrayList()
     var  originlongitude : Double=0.0
     var  originlatitude : Double=0.0
@@ -857,37 +981,7 @@ class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallb
 
     fun setMarkerOnMap() {
         try {
-          /*  val coder = Geocoder(this)
-            try {
-                val adresses  = coder.getFromLocationName(etpickup.text.toString(), 50)
 
-                val location: Address = adresses.get(0)
-                originlatitude =  location.latitude
-                originlongitude =  location.longitude
-
-                startLatlng= LatLng(originlatitude,originlongitude)
-
-                val coder1 = Geocoder(this)
-                val adresses1 = coder1.getFromLocationName(destination.text.toString(), 50) as java.util.ArrayList<Address>
-
-                val location1: Address = adresses1.get(0)
-                destlatitude =  location1.latitude
-                destlongitude =  location1.longitude
-                destLatLng= LatLng(destlatitude,destlongitude)
-
-                //  return distanceInMeters / 1000
-
-                Log.v("distance",distance)
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-
-*/
-
-
-
-
-            //destLatLng= LatLng(p.destlat!!,p.destlong!!)
             if (marker == null || marker1 == null) {
                 place1 = MarkerOptions().position(startLatlng!!).title("Origin") //new LatLng(27.658143, 85.3199503)
                 place2 = MarkerOptions().position(destLatLng!!).title("Destination") //new LatLng(27.667491, 85.3208583)
@@ -912,48 +1006,6 @@ class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallb
             Log.d("MapException", e.toString())
         }
     }
-
-    private fun senddistance() {
-
-
-
-
-/*   *//*     val progressDialog = ProgressDialog(this)
-        // progressDialog.setTitle("Kotlin Progress Bar")
-        progressDialog.setMessage("Please wait")
-        progressDialog.show()
-        progressDialog.setCanceledOnTouchOutside(false)*//*
-        var mAPIService: ApiService? = null
-        mAPIService = ApiClient.apiService
-            mAPIService!!.senddistance(
-                "Bearer "+ sessionManager.fetchAuthToken(),
-                distance
-            ).enqueue(object : Callback<GetPrice> {
-                override fun onResponse(call: Call<GetPrice>, response: Response<GetPrice>) {
-                    Log.i("", "post submitted to API." + response.body()!!)
-                    if (response.isSuccessful()) {
-                        Log.v("vvv", response.body().toString()!!)
-                        lo = response.body()!!
-                        if (lo.status == 200) {
-                            carprice.setText(lo.currency+lo.car.totalPrice)
-                            bikeprice.setText(lo.currency+lo.bike.totalPrice)
-                       *//*     distance1.setText(lo.distance)
-                            distance2.setText(lo.distance)*//*
-                         //   progressDialog.dismiss()
-
-                        } else {
-                          //  progressDialog.dismiss()
-                            //  Toast.makeText(this@ProfileDetail, "not submiited", Toast.LENGTH_SHORT).show()
-                        }
-
-                    }
-                }
-
-                override fun onFailure(call: Call<GetPrice>, t: Throwable) {
-                    Toast.makeText(this@TravelDashboard, t.message, Toast.LENGTH_SHORT).show()
-                }
-            })*/
-        }
 
 
     private fun getUrl(origin: LatLng, dest: LatLng): String? {
@@ -1093,10 +1145,5 @@ class TravelDashboard : AppCompatActivity()  , LocationListener, OnMapReadyCallb
         }
     }
 
-
-    override fun onTaskDone(vararg values: Any?) {
-      /*  if (currentPolyline != null) currentPolyline!!.remove()
-        currentPolyline = mMap!!.addPolyline(values[0] as PolylineOptions?)*/
-    }
 
 }

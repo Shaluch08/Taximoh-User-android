@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.uveous.loopfoonpay.Api.Model.tripresult
 
 internal class TripListAdapter(private var tripList: List<tripresult>,var currency:String,val context :Context) :
@@ -25,6 +26,8 @@ internal class TripListAdapter(private var tripList: List<tripresult>,var curren
         var fare: TextView = view.findViewById(R.id.fare)
         var status: TextView = view.findViewById(R.id.status)
         var image: ImageView = view.findViewById(R.id.image)
+        var cancel: ImageView = view.findViewById(R.id.cancel)
+        var driverimage: ImageView = view.findViewById(R.id.image11)
         var card1: CardView = view.findViewById(R.id.card1)
     }
     @NonNull
@@ -36,14 +39,19 @@ internal class TripListAdapter(private var tripList: List<tripresult>,var curren
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val tripresult = tripList[position]
         holder.time.text = tripresult.request_date+","+tripresult.request_time
-        if(tripresult.status!!.contentEquals("processing") || tripresult.status!!.contentEquals("completed")){
+        if(tripresult.status!!.contentEquals("ongoing") || tripresult.status!!.contentEquals("completed")|| tripresult.status!!.contentEquals("schedule")){
             holder.vechileno.visibility= VISIBLE
             holder.vechileno.text = tripresult.vehicle_name+","+tripresult.vehicle_number
-
+            holder.cancel.visibility= GONE
+            holder.status.visibility= VISIBLE
         }else{
             holder.vechileno.visibility= VISIBLE
             holder.vechileno.text = ""
+            holder.cancel.visibility= VISIBLE
+            holder.status.visibility= GONE
         }
+
+
 
         holder.origin.text = tripresult.origin_address
         holder.destination.text = tripresult.destination_address
@@ -59,7 +67,12 @@ internal class TripListAdapter(private var tripList: List<tripresult>,var curren
             context.startActivity(Intent(context,TripDetail::class.java).putExtra("requestid",tripresult.request_id))
         })
 
+        if(tripresult.profile_photo!!.contentEquals("")){
+            holder.driverimage.setImageResource(R.drawable.taxidriver)
+        }else{
+            Glide.with(context).load(tripresult.profile_photo).into(holder.driverimage)
 
+        }
     }
 
     override fun getItemCount(): Int {

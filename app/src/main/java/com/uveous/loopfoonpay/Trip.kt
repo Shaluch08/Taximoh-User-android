@@ -39,7 +39,7 @@ class Trip : AppCompatActivity() {
         recyclerview = findViewById(R.id.recyclerview)
 
         toolbar.setNavigationOnClickListener(View.OnClickListener {
-            startActivity(Intent(this, TravelDashboard::class.java))
+            startActivity(Intent(this,TravelDashboard::class.java))
         })
         sessionManager = SessionManager(this)
 
@@ -50,6 +50,7 @@ class Trip : AppCompatActivity() {
     }
 
     private fun getTripDetail() {
+        try{
         val progressDialog = ProgressDialog(this)
         // progressDialog.setTitle("Kotlin Progress Bar")
         progressDialog.setMessage("Please wait")
@@ -84,5 +85,9 @@ class Trip : AppCompatActivity() {
                 }
             })
         }
+        } catch (e: java.lang.Exception) {
+
+        }
     }
+
 }

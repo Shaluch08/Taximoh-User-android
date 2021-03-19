@@ -36,7 +36,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:hint="Name"
+                android:hint="First Name"
                 style="@style/TextInputLayout"
                 android:drawableLeft="@drawable/mail"
                 android:layout_height="wrap_content">
@@ -45,6 +45,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/name"
+                    android:gravity="top"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true"
+                    >
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>   <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:hint="Last Name"
+                style="@style/TextInputLayout"
+                android:drawableLeft="@drawable/mail"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/lname"
                     android:gravity="top"
                     android:inputType="textEmailAddress"
                     android:singleLine="true"

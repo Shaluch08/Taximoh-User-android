@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "34386802715",
+    "project_id": "taximoh",
+    "storage_bucket": "taximoh.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34386802715:android:f6409c893b6534b03f20be",
+        "android_client_info": {
+          "package_name": "com.uveous.loopfoonpay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "34386802715-qfmea8tjo7aopsbf0lufaj3hu4nkkhr2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUih9r0FKFvPyH0Z0JEkbwJ2oipBpuNlA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "34386802715-qfmea8tjo7aopsbf0lufaj3hu4nkkhr2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

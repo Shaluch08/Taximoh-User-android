@@ -10,11 +10,12 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.bumptech.glide.Glide
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -53,18 +54,30 @@ class TripDetail : AppCompatActivity(),OnMapReadyCallback{
     lateinit var permile: TextView
     lateinit var basefare: TextView
     lateinit var vechileno: TextView
+    lateinit var otp: TextView
+    lateinit var dname: TextView
+    lateinit var show: LinearLayout
+    lateinit var dnumber: TextView
+    lateinit var simpleRatingBar: RatingBar
+    lateinit var driverimage: ImageView
+    lateinit var driver: LinearLayout
      var requestid: Int?=0
     private var mMap: GoogleMap? = null
     private lateinit var sessionManager: SessionManager
     var destLatLng1: LatLng? = null
     lateinit var lo : TripDetailModel
+    lateinit var cancel: ImageView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.tripdetail)
 
         toolbar=findViewById(R.id.toolbar)
+        driver=findViewById(R.id.driver)
         status=findViewById(R.id.status)
+        show=findViewById(R.id.show)
+        driverimage=findViewById(R.id.driverimage)
         origin=findViewById(R.id.origin)
         tax=findViewById(R.id.tax)
         image=findViewById(R.id.image)
@@ -72,11 +85,17 @@ class TripDetail : AppCompatActivity(),OnMapReadyCallback{
         permile=findViewById(R.id.permile)
         destination=findViewById(R.id.destination)
         vechileno=findViewById(R.id.vechileno)
+        otp=findViewById(R.id.otp)
+        dnumber=findViewById(R.id.dnumber)
+        simpleRatingBar=findViewById(R.id.simpleRatingBar)
+        simpleRatingBar.isEnabled=false
+        dname=findViewById(R.id.dname)
         fare=findViewById(R.id.fare)
         tfare=findViewById(R.id.tfare)
         faret=findViewById(R.id.faret)
         requestid=intent.getIntExtra("requestid",0)
         sessionManager = SessionManager(this)
+        cancel=findViewById(R.id.cancel)
 
         toolbar.setNavigationOnClickListener(View.OnClickListener {
             startActivity(Intent(this, Trip::class.java))
@@ -90,6 +109,7 @@ class TripDetail : AppCompatActivity(),OnMapReadyCallback{
         getTripDetail()
     }
     fun getTripDetail(){
+        try{
         val progressDialog = ProgressDialog(this)
         // progressDialog.setTitle("Kotlin Progress Bar")
         progressDialog.setMessage("Please wait")
@@ -108,31 +128,56 @@ class TripDetail : AppCompatActivity(),OnMapReadyCallback{
                    lo= response.body()!!
                     if (lo.status == 200) {
                         setMarkerOnMap()
-
+                        show.visibility=VISIBLE
                         progressDialog.dismiss()
                         status.text=lo.request_status
                         origin.text=lo.origin_address
                         destination.text=lo.destination_address
                         tax.text=lo.tax
+                        otp.text=lo.valid_otp
+                        dname.text=lo.driver_name
+                        dnumber.text=lo.driver_mobile
                         basefare.text=lo.currency+lo.base_fare_price
                         permile.text=lo.currency+lo.km_price
                         faret.text=lo.currency+lo.total_trip_price
+                        simpleRatingBar.setRating(lo.trip_rating.toFloat());
 
                         fare.text=lo.currency+lo.total_trip_price
                         tfare.text=lo.currency+lo.total_trip_price
-                        if(lo.request_status!!.contentEquals("processing") || lo.request_status!!.contentEquals("completed")){
+
+                        if(lo.request_status!!.contentEquals("ongoing") || lo.request_status!!.contentEquals("completed")|| lo.request_status!!.contentEquals("schedule")){
+                            cancel.visibility= GONE
+                            status.visibility= VISIBLE
+                        }else{
+                            cancel.visibility= VISIBLE
+                            status.visibility= GONE
+                        }
+
+                        if(lo.request_status!!.contentEquals("schedule") || lo.request_status!!.contentEquals("completed")){
                             vechileno.text= lo.vehicle_name+","+lo.vehicle_number
                         }else{
                             vechileno.text=""
                         }
+
+                        if(lo.request_status!!.contentEquals("ongoing") ){
+                            driver.visibility= VISIBLE
+                        }else{
+                            driver.visibility= GONE
+                        }
+
                         if(lo.category_name.equals("Car")){
                             image.setImageResource(R.drawable.car1)
                         }else{
                            image.setImageResource(R.drawable.motorbike)
                         }
+                           if(lo.profile_photo.contentEquals("")){
+                               driverimage.setImageResource(R.drawable.taxidriver)
+                           }else{
+                               Glide.with(this@TripDetail).load(lo.profile_photo).into(driverimage)
 
+                           }
                     } else {
-
+                        show.visibility= GONE
                         progressDialog.dismiss()
                     }
 
@@ -143,7 +188,9 @@ class TripDetail : AppCompatActivity(),OnMapReadyCallback{
                 Toast.makeText(this@TripDetail, t.message, Toast.LENGTH_SHORT).show()
             }
         })
+        } catch (e: java.lang.Exception) {
 
+        }
     }
 
 

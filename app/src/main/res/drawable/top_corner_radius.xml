@@ -6,13 +6,13 @@
         android:color="#FFF"
         />
 
-    <padding android:left="1dp"
-        android:top="1dp"
-        android:right="1dp"
-        android:bottom="1dp"
+    <padding android:left="5dp"
+        android:top="5dp"
+        android:right="5dp"
+        android:bottom="5dp"
         />
 
     <corners
-        android:topLeftRadius="@dimen/dim_15"
-        android:topRightRadius="@dimen/dim_15"/>
+        android:topLeftRadius="@dimen/dim_40"
+        android:topRightRadius="@dimen/dim_40"/>
 </shape>

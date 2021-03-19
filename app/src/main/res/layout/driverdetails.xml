@@ -1,58 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?><!-- Use DrawerLayout as root container for activity -->
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#ffffff"
-    >
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+<RelativeLayout
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            >
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:background="#FAFAFA"
-        android:layout_gravity="center"
-        android:gravity="center"
-        app:title="Driver Details"
-        app:navigationIcon="@drawable/ic_keyboard_arrow_left_black_24dp"
-        app:titleTextColor="@color/black"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        app:layout_constraintTop_toTopOf="@+id/fragment_container1"/>
+        android:layout_height="300dp"
+        >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-<LinearLayout android:name="com.google.android.gms.maps.SupportMapFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+                <ImageView
+                    android:layout_width="@dimen/dim_40"
+                    android:layout_height="@dimen/dim_40"
+                    android:padding="8dp"
+                    android:layout_marginLeft="@dimen/dim_20"
+                    android:id="@+id/back"
+                    android:visibility="visible"
+                    android:layout_marginTop="@dimen/dim_20"
+                    android:layout_alignParentTop="true"
+                    android:focusableInTouchMode="false"
+                    android:background="@drawable/background2"
+                    android:src="@drawable/ic_baseline_keyboard_arrow_left_24" />
 
-    <ImageView
-        android:layout_width="@dimen/dim_40"
-        android:layout_height="@dimen/dim_40"
-        android:padding="8dp"
-        android:layout_marginLeft="@dimen/dim_20"
-        android:id="@+id/back"
-        android:visibility="gone"
-        android:layout_marginTop="@dimen/dim_20"
-        android:layout_alignParentTop="true"
-        android:focusableInTouchMode="false"
-        android:background="@drawable/background"
-        android:src="@drawable/ic_baseline_keyboard_arrow_left_24" />
 
+
+            </RelativeLayout>
+
+    </fragment>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/top_corner_radius"
+        android:id="@+id/showratings">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image1"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:src="@drawable/woman"
+            app:civ_border_width="2dp"
+            android:layout_marginTop="@dimen/dim_15"
+            app:civ_border_color="#FF000000"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:id="@+id/drivername1"
+            android:text="NAme"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:id="@+id/driverno1"
+            android:text="NAme"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="Give Rating"/>
+
+        <RatingBar
+            android:id="@+id/simpleRatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:layout_margin="@dimen/dim_20"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="Your Comment(Optional)"/>
+
+        <EditText
+            android:id="@+id/et_post"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="top"
+            android:background="@drawable/back"
+            android:lines="4"
+            android:layout_margin="@dimen/dim_10"
+            android:padding="@dimen/dim_10" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:id="@+id/submit"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            android:padding="@dimen/dim_10"
+            android:layout_marginLeft="@dimen/dim_30"
+            android:layout_marginRight="@dimen/dim_30"
+            android:layout_marginTop="@dimen/dim_10"
+            android:layout_marginBottom="@dimen/dim_10"
+            android:background="@drawable/backgroundbtn1"
+            android:text="Submit">
+
+
+        </TextView>
+
+
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/top_corner_radius"
         android:id="@+id/showdetails">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/dim_20"
             android:orientation="horizontal"
             android:layout_height="wrap_content">
 
@@ -62,17 +160,50 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textColor="#000"
-                    android:textStyle="bold"
-                    android:id="@+id/vechileno"
                     android:paddingLeft="@dimen/dim_20"
                     android:paddingRight="@dimen/dim_20"
-                    android:paddingTop="@dimen/dim_20"
-                    android:text="VEHCILE NO"/>
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textColor="#000"
+                        android:textStyle="bold"
+                        android:id="@+id/vechileno"
+                        android:text="VEHCILE NO"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bgoval2"
+                    android:layout_marginLeft="@dimen/dim_10"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="@dimen/dim_20"
+                        android:layout_height="@dimen/dim_20"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_baseline_dialpad_24"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Name"
+                        android:layout_marginLeft="@dimen/dim_10"
+                        android:textColor="#fff"
+                        android:id="@+id/otp"
+                        android:textSize="16sp"
+                        />
+
+                </LinearLayout>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -90,20 +221,36 @@
                     android:textColor="#000"
                     android:layout_marginTop="5dp"
                     android:id="@+id/drivername"
-
                     android:layout_marginLeft="@dimen/dim_20"
                     android:text="NAme"/>
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:textColor="#000"
+                    android:id="@+id/phone"
                     android:layout_marginTop="5dp"
-                    android:id="@+id/driverno"
-
                     android:layout_marginLeft="@dimen/dim_20"
-                    android:text="NAme"/>
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/dim_20"
+                        android:layout_height="@dimen/dim_20"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_baseline_phone_24"
+                        />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textColor="#000"
+                        android:layout_marginLeft="5dp"
+                        android:id="@+id/driverno"
+                        android:text="NAme"/>
+
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -122,7 +269,7 @@
             android:layout_width="match_parent"
             android:layout_marginLeft="@dimen/dim_10"
             android:layout_marginRight="@dimen/dim_10"
-            android:layout_marginTop="@dimen/dim_20"
+            android:layout_marginTop="@dimen/dim_10"
             app:cardCornerRadius="4dp"
             app:cardElevation="2dp"
             app:cardUseCompatPadding="true"
@@ -141,11 +288,10 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="@dimen/dim_10"
-                        android:layout_height="@dimen/dim_10"
+                        android:layout_width="@dimen/dim_20"
+                        android:layout_height="@dimen/dim_20"
                         android:layout_marginLeft="15dp"
-                        android:layout_marginTop="10dp"
-                        android:src="@drawable/ic_baseline_brightness_1_24"
+                        android:src="@drawable/icon_my_location"
                         app:tint="#16F14C" />
 
                     <TextView
@@ -196,11 +342,11 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="@dimen/dim_10"
-                        android:layout_height="@dimen/dim_10"
+                        android:layout_width="@dimen/dim_20"
+                        android:layout_height="@dimen/dim_20"
                         android:layout_marginLeft="15dp"
-                        android:layout_marginTop="10dp"
-                        android:src="@drawable/ic_baseline_brightness_1_24"
+
+                        android:src="@drawable/icon_end_location"
                         app:tint="#E11D1D" />
 
                     <TextView
@@ -287,49 +433,24 @@
 
         </androidx.cardview.widget.CardView>
 
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:layout_marginTop="60dp"
-          android:layout_gravity="center"
-        android:gravity="center"
-        android:id="@+id/sorrymessage">
-
-
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textColor="#000"
-            android:textStyle="bold"
-            android:fontFamily="casual"
-            android:padding="@dimen/dim_20"
-            android:text="Sorry for inconvience but we are not available on this time.Please check after sometime."/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="OK"
             android:id="@+id/ok"
-            android:textColor="#fff"
-            android:textSize="18sp"
-            android:padding="@dimen/dim_20"
-            android:background="@drawable/backgroundbtn"
-            >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/backgroundbtn1"
+            android:textColor="@android:color/white"
+            android:text="Give Rating"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:padding="@dimen/dim_10"
+            android:layout_marginTop="@dimen/dim_10"
+            android:layout_marginBottom="@dimen/dim_10"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp"
+            android:layout_gravity="center"/>
 
-        </TextView>
+
     </LinearLayout>
-
-</LinearLayout>
-
-
-</androidx.appcompat.widget.LinearLayoutCompat>
-
+        </RelativeLayout>
 

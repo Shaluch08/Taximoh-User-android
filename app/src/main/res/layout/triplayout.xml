@@ -100,6 +100,13 @@
 
                         </TextView>
 
+                        <ImageView
+                            android:layout_width="@dimen/dim_50"
+                            android:layout_height="@dimen/dim_50"
+                            android:src="@drawable/cancel_stamp"
+                            android:visibility="gone"
+                            android:id="@+id/cancel"
+                            ></ImageView>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

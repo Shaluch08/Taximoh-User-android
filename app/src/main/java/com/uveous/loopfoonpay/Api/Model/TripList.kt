@@ -34,5 +34,7 @@ class tripresult {
     var vehicle_name:String ?=""
     @SerializedName("vehicle_number")
     var vehicle_number:String ?=""
+ @SerializedName("profile_photo")
+    var profile_photo:String ?=""
 
 }

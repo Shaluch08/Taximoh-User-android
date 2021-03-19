@@ -7,7 +7,7 @@ import retrofit2.http.*
 interface ApiService {
     @FormUrlEncoded
     @POST("signup")
-    fun register(@Field("name") name: String,@Field("mobile") mobile:String,@Field("email") email:String,
+    fun register(@Field("first_name") name: String,@Field("last_name") lname: String,@Field("mobile") mobile:String,@Field("email") email:String,
                  @Field("gender") gender: String, @Field("dob") dob: String,@Field("password") password: String): Call<usersignup>
 
 
@@ -19,6 +19,10 @@ interface ApiService {
     @POST("users/request/cancel-request")
     fun cancel(@Header("Authorization") token :String,@Field("request_id") request_id: Int,@Field("user_id") user_id: Int) :Call<cancelride>
 
+    @FormUrlEncoded
+    @POST("user/trip/create-review")
+    fun review(@Header("Authorization") token :String,@Field("request_id") request_id: Int,@Field("user_id") user_id: Int,@Field("rating") rating: String,@Field("comment") comment: String) :Call<cancelride>
+
     @GET("user/details/where-clauses")
     fun getprofile(@Header("Authorization") token :String,@Query("user_id") user_id:Int):Call<profiledetail>
 
@@ -28,7 +32,7 @@ interface ApiService {
     @GET("user/details/request-accept-driver-details")
     fun getdriverdetails(@Header("Authorization") token :String,@Query("request_id") request_id:Int,@Query("user_id") user_id:Int):Call<Driverdetail>
 
-  @GET("user/details/user-request-status")
+   @GET("user/details/user-request-status")
     fun getstatus(@Header("Authorization") token :String,@Query("request_id") request_id:Int,@Query("user_id") user_id:Int):Call<progressstatus>
 
    @GET("user/trip/get-trip-details")
@@ -36,6 +40,15 @@ interface ApiService {
 
     @GET("user/trip/get-all-trips")
     fun getTripList(@Header("Authorization") token :String, @Query("user_id") user_id:Int):Call<TripList>
+
+    @FormUrlEncoded
+    @POST("user/forgot-password/check-username-exist")
+    fun forgotemail(@Field("username") mobile: String) :Call<backgroundcheck>
+
+    @FormUrlEncoded
+    @POST("user/forgot-password/change-password")
+    fun forgotconfirmpassword(@Field("user_id") user_id: Int,@Field("password") password: String) :Call<backgroundcheck>
+
 
     @FormUrlEncoded
     @POST("users/request/create-request")

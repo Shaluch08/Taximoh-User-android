@@ -22,6 +22,10 @@
             android:icon="@drawable/ic_baseline_card_giftcard_24"
             android:title="Offers" />
         <item
+            android:id="@+id/invitefriend"
+            android:icon="@drawable/ic_baseline_supervised_user_circle_24"
+            android:title="Invite Friend" />
+        <item
             android:id="@+id/support"
             android:icon="@drawable/ic_baseline_help_24"
             android:title="Support" />
