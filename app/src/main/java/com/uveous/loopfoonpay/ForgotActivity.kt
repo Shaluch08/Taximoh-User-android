@@ -1,10 +1,12 @@
 package com.uveous.loopfoonpay
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -19,7 +21,7 @@ import retrofit2.Response
 class ForgotActivity : AppCompatActivity(){
     lateinit var toolbar: Toolbar
     lateinit var logindata: Button
-    lateinit var email: TextInputEditText
+    lateinit var email: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +37,10 @@ class ForgotActivity : AppCompatActivity(){
 
 
         logindata.setOnClickListener(View.OnClickListener {
+            val progressDialog = ProgressDialog(this@ForgotActivity)
+            progressDialog.setMessage("Please wait")
+            progressDialog.show()
+            progressDialog.setCanceledOnTouchOutside(false)
             var mAPIService: ApiService? = null
             mAPIService = ApiClient.apiService
             mAPIService!!.forgotemail(email.text.toString()).enqueue(object :
@@ -45,13 +51,13 @@ class ForgotActivity : AppCompatActivity(){
                     if (response.isSuccessful()) {
                         var lo: backgroundcheck = response.body()!!
                         if (lo.status == 200) {
-
+                            progressDialog.dismiss()
                             startActivity(Intent(this@ForgotActivity,EnterotpForgotActivity::class.java)
                                     .putExtra("otp",lo.forgot_otp)
                                     .putExtra("userid",lo.user_id))
-                            logindata.isEnabled=false
-                        } else {
 
+                        } else {
+                            progressDialog.dismiss()
                             Toast.makeText(this@ForgotActivity, "error", Toast.LENGTH_SHORT).show()
                         }
 
@@ -60,7 +66,8 @@ class ForgotActivity : AppCompatActivity(){
 
 
                 override fun onFailure(call: Call<backgroundcheck>, t: Throwable) {
-                    Log.v("tok", t.message.toString());
+                    Log.v("tok", t.message.toString())
+                    progressDialog.dismiss()
                     Toast.makeText(this@ForgotActivity, t.message, Toast.LENGTH_SHORT).show()
                 }
             })

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearcar"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_centerInParent="true"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="fitCenter"
+            android:duplicateParentState="true"
+            android:id="@+id/image"
+            android:focusableInTouchMode="false"
+            android:src="@drawable/tcar" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:textColor="#000"
+            android:duplicateParentState="true"
+            android:textSize="18sp"
+            android:focusableInTouchMode="false"
+            android:id="@+id/textcar"
+            android:layout_weight="1"
+            android:text="Car">
+
+        </TextView>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:layout_marginRight="5dp"
+            android:textColor="#000"
+            android:duplicateParentState="true"
+            android:focusableInTouchMode="false"
+            android:textSize="16sp"
+            android:id="@+id/distance"
+            android:visibility="gone"
+            android:text="Price">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:layout_marginRight="5dp"
+            android:duplicateParentState="true"
+            android:textColor="#000"
+            android:textSize="16sp"
+            android:focusableInTouchMode="false"
+            android:id="@+id/carprice"
+            android:text="Price">
+
+        </TextView>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dim_10"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/infocar"
+            android:focusableInTouchMode="false"
+            android:duplicateParentState="true"
+            android:src="@drawable/ic_baseline_info_24"
+            >
+
+        </ImageView>
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -79,9 +79,7 @@ import java.net.ProtocolException
 import java.net.URL
 import java.util.*
 
-
 class TravelDashboard : AppCompatActivity()  , OnMapReadyCallback{
-
     var navigationPosition: Int = 0
     lateinit var drawerLayout : DrawerLayout;
     lateinit var toolbar : Toolbar
@@ -137,9 +135,9 @@ class TravelDashboard : AppCompatActivity()  , OnMapReadyCallback{
         setContentView(R.layout.travel_dashboard)
 
         if (!Places.isInitialized()) {
-            Places.initialize(this,
-                    getString(R.string.google_maps_key))
+            Places.initialize(this, getString(R.string.google_maps_key))
         }
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         mSettingsClient = LocationServices.getSettingsClient(this)
 
@@ -427,10 +425,10 @@ class TravelDashboard : AppCompatActivity()  , OnMapReadyCallback{
             val tax = dialog.findViewById(R.id.tax) as TextView
             val distance = dialog.findViewById(R.id.distance) as TextView
 
-            price.setText(lo.currency+lo.bike.totalPrice)
+         /*   price.setText(lo.currency+lo.bike.totalPrice)
             base.setText(lo.currency+lo.bike.baseFare)
             fare.setText(lo.currency+lo.bike.prKM)
-            tax.setText(lo.bike.tax)
+            tax.setText(lo.bike.tax)*/
             distance.setText(lo.distance)
             yesBtn.setOnClickListener {
                 dialog.dismiss()
@@ -450,11 +448,11 @@ class TravelDashboard : AppCompatActivity()  , OnMapReadyCallback{
             val fare = dialog.findViewById(R.id.fare) as TextView
             val tax = dialog.findViewById(R.id.tax) as TextView
             val distance = dialog.findViewById(R.id.distance) as TextView
-
+/*
             price.setText(lo.currency+lo.car.totalPrice)
             base.setText(lo.currency+lo.car.baseFare)
             fare.setText(lo.currency+lo.car.prKM)
-            tax.setText(lo.car.tax)
+            tax.setText(lo.car.tax)*/
             distance.setText(lo.distance)
             yesBtn.setOnClickListener {
                 dialog.dismiss()
@@ -679,7 +677,8 @@ class TravelDashboard : AppCompatActivity()  , OnMapReadyCallback{
                     val dist = (earthRadius * c).toFloat()
                     distance=dist.toString()
 
-                    startActivity(Intent(this, RequestRide::class.java).putExtra("destination",destination.text.toString())
+                    startActivity(Intent(this, RequestRide::class.java)
+                            .putExtra("destination",destination.text.toString())
                             .putExtra("origin",etpickup.text.toString())
                             .putExtra("type",type)
                             .putExtra("distance",distance)

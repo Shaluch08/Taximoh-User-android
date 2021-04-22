@@ -1,10 +1,12 @@
 package com.uveous.loopfoonpay
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -16,11 +18,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ConfirmForgotActivity : AppCompatActivity(){
+class  ConfirmForgotActivity : AppCompatActivity(){
     lateinit var toolbar: Toolbar
     lateinit var logindata: Button
-    lateinit var email: TextInputEditText
-    lateinit var email1: TextInputEditText
+    lateinit var email: EditText
+    lateinit var email1: EditText
     var userid:Int=0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +41,10 @@ class ConfirmForgotActivity : AppCompatActivity(){
 
         logindata.setOnClickListener(View.OnClickListener {
             if(email.text.toString().contentEquals(email1.text.toString())){
+                val progressDialog = ProgressDialog(this@ConfirmForgotActivity)
+                progressDialog.setMessage("Please wait")
+                progressDialog.show()
+                progressDialog.setCanceledOnTouchOutside(false)
                 var mAPIService: ApiService? = null
                 mAPIService = ApiClient.apiService
                 mAPIService!!.forgotconfirmpassword(userid,email.text.toString()).enqueue(object :
@@ -49,14 +55,13 @@ class ConfirmForgotActivity : AppCompatActivity(){
                         if (response.isSuccessful()) {
                             var lo: backgroundcheck = response.body()!!
                             if (lo.status == 200) {
-
+                                progressDialog.dismiss()
                                 Toast.makeText(this@ConfirmForgotActivity, "Password changed.", Toast.LENGTH_SHORT).show()
-
                                 startActivity(Intent(this@ConfirmForgotActivity,LoginActivity::class.java)
                                 )
-                                logindata.isEnabled=false
-                            } else {
 
+                            } else {
+                                progressDialog.dismiss()
                                 Toast.makeText(this@ConfirmForgotActivity, "error", Toast.LENGTH_SHORT).show()
                             }
 
@@ -66,6 +71,7 @@ class ConfirmForgotActivity : AppCompatActivity(){
 
                     override fun onFailure(call: Call<backgroundcheck>, t: Throwable) {
                         Log.v("tok", t.message.toString());
+                        progressDialog.dismiss()
                         Toast.makeText(this@ConfirmForgotActivity, t.message, Toast.LENGTH_SHORT).show()
                     }
                 })

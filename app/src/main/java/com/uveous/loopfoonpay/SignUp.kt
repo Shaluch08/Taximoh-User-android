@@ -3,6 +3,7 @@ package com.uveous.loopfoonpay
 import android.Manifest
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
+import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -15,15 +16,26 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.*
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.uveous.loopfoonpay.Api.ApiClient
 import com.uveous.loopfoonpay.Api.ApiService
+import com.uveous.loopfoonpay.Api.Model.countrylist
+import com.uveous.loopfoonpay.Api.Model.result
 import com.uveous.loopfoonpay.Api.Model.userlogin
 import com.uveous.loopfoonpay.Api.Model.usersignup
 import com.uveous.loopfoonpay.Api.SessionManager
@@ -33,27 +45,35 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-
 class SignUp : AppCompatActivity() ,LocationListener{
-    lateinit var dob: TextInputEditText
-    lateinit var name: TextInputEditText
-    lateinit var lname: TextInputEditText
-    lateinit var email: TextInputEditText
-    lateinit var phone: TextInputEditText
-    lateinit var pwd: TextInputEditText
-    lateinit var cpwd: TextInputEditText
+    lateinit var dob: EditText
+    lateinit var name: EditText
+    lateinit var lname: EditText
+    lateinit var email: EditText
+    lateinit var phone: EditText
+    lateinit var pwd: EditText
+    lateinit var cpwd: EditText
     lateinit var radioGroup: RadioGroup
     private var mYear = 0
     private  var mMonth:Int = 0
     private  var mDay:Int = 0
     lateinit var gender :String
     private lateinit var sessionManager: SessionManager
+    lateinit var toolbar: Toolbar
+    var listcountryall = ArrayList<result>()
+    var listcountry = ArrayList<String>()
+    var listcountryid = ArrayList<Int>()
+    lateinit var code:LinearLayout
+    lateinit var flag:ImageView
+    lateinit var countrycode:TextView
+    lateinit var dialog : Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
 
         dob=findViewById(R.id.dob)
+        toolbar=findViewById(R.id.toolbar)
         name=findViewById(R.id.name)
         lname=findViewById(R.id.lname)
         email=findViewById(R.id.email)
@@ -65,12 +85,24 @@ class SignUp : AppCompatActivity() ,LocationListener{
         radioGroup.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { group, checkedId ->
                     val radio: RadioButton = findViewById(checkedId)
                       gender=radio.text.toString()
-                    Toast.makeText(applicationContext," On checked change :"+
+                    /*Toast.makeText(applicationContext," On checked change :"+
                             " ${radio.text}",
-                            Toast.LENGTH_SHORT).show()
+                            Toast.LENGTH_SHORT).show()*/
                 })
 
+        toolbar.setNavigationOnClickListener(View.OnClickListener {
+            startActivity(Intent(this,LoginActivity::class.java))
+        })
+        code=findViewById(R.id.code)
+        flag=findViewById(R.id.flag)
+        countrycode=findViewById(R.id.countrycode)
+        dialog = Dialog(this@SignUp)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
+        getCountryfun()
+        code.setOnClickListener(View.OnClickListener {
+            showDialog()
+        })
         dob.setOnClickListener(View.OnClickListener {
         val c: Calendar = Calendar.getInstance()
         mYear = c.get(Calendar.YEAR)
@@ -379,5 +411,94 @@ class SignUp : AppCompatActivity() ,LocationListener{
 
         }
     }
+    private fun getCountryfun() {
+        try{
+            var mAPIService: ApiService? = null
+            mAPIService = ApiClient.apiService
+            mAPIService!!.country().enqueue(object : Callback<countrylist> {
+                override fun onResponse(call: Call<countrylist>, response: Response<countrylist>) {
+                    Log.i("", "post submitted to API." + response.body()!!)
+                    if (response.isSuccessful()) {
+                        var lo: countrylist = response.body()!!
+                        if(lo.status==200){
+                            var lo : countrylist =response.body()!!
+                            listcountryall=lo.result
+                            countrycode.text=lo.result.get(0).phone_code
+                            Glide.with(this@SignUp).load(lo.result.get(0).icon+"32.png").into(flag)
+                            for (i in 0 until listcountryall.size) {
+                                listcountryall.get(i).country_name?.let { listcountry.add(it) }
+                            }
+                            for (i in 0 until listcountryall.size) {
+                                listcountryall.get(i).id?.let { listcountryid.add(it) }
+                            }
 
+                        }else{
+
+                        }
+
+                    }
+                }
+
+                override fun onFailure(call: Call<countrylist>, t: Throwable) {
+                    Toast.makeText(this@SignUp, t.message, Toast.LENGTH_SHORT).show()
+                }
+            })
+        }catch (e:java.lang.Exception){
+
+        }
+    }
+    private lateinit var countrylistadapter: CountryListAdapter
+
+    private fun showDialog() {
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.countrycode_layout)
+        val window: Window = dialog.getWindow()!!
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+        val recyclerview = dialog.findViewById(R.id.recyclerview) as RecyclerView
+        val layoutManager = LinearLayoutManager(applicationContext)
+        recyclerview.layoutManager = layoutManager
+        recyclerview.itemAnimator = DefaultItemAnimator()
+
+        countrylistadapter = CountryListAdapter(listcountryall,this@SignUp)
+        recyclerview.adapter = countrylistadapter
+
+        dialog.show()
+
+    }
+
+
+
+    inner class CountryListAdapter(private var counttrycode: List<result>, val context :Context) :
+            RecyclerView.Adapter<CountryListAdapter.MyViewHolder>() {
+
+        inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            var countryname: TextView = view.findViewById(R.id.countryname)
+            var countrycode: TextView = view.findViewById(R.id.countrycode)
+            var flag: ImageView = view.findViewById(R.id.flag)
+            var code: LinearLayout = view.findViewById(R.id.code)
+
+        }
+        @NonNull
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val itemView = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.recyclr_countrycode, parent, false)
+            return MyViewHolder(itemView)
+        }
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            val counttrycode = counttrycode[position]
+            holder.countrycode.text=counttrycode.phone_code
+            holder.countryname.text=counttrycode.country_name+" "+"("+counttrycode.country_code+")"
+            Glide.with(context).load(counttrycode.icon+"32.png").into(holder.flag)
+
+            holder.code.setOnClickListener(View.OnClickListener {
+                dialog.dismiss()
+                countrycode.text=counttrycode.phone_code
+                Glide.with(this@SignUp).load(counttrycode.icon+"32.png").into(flag)
+            })
+        }
+
+        override fun getItemCount(): Int {
+            return counttrycode.size
+        }
+    }
 }

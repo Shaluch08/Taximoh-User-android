@@ -1,4 +1,4 @@
-package com.uveous.loopfoonpay.Api
+    package com.uveous.loopfoonpay.Api
 
 import com.uveous.loopfoonpay.Api.Model.*
 import retrofit2.Call
@@ -27,7 +27,7 @@ interface ApiService {
     fun getprofile(@Header("Authorization") token :String,@Query("user_id") user_id:Int):Call<profiledetail>
 
     @GET("user/details/get-request-price")
-    fun senddistance(@Header("Authorization") token :String,@Query("distance") distance:String):Call<GetPrice>
+    fun senddistance(@Header("Authorization") token :String,@Query("distance") distance:String,@Query("user_id") user_id: Int):Call<GetPrice>
 
     @GET("user/details/request-accept-driver-details")
     fun getdriverdetails(@Header("Authorization") token :String,@Query("request_id") request_id:Int,@Query("user_id") user_id:Int):Call<Driverdetail>
@@ -49,6 +49,8 @@ interface ApiService {
     @POST("user/forgot-password/change-password")
     fun forgotconfirmpassword(@Field("user_id") user_id: Int,@Field("password") password: String) :Call<backgroundcheck>
 
+    @GET("get/countries")
+    fun country():Call<countrylist>
 
     @FormUrlEncoded
     @POST("users/request/create-request")
@@ -58,6 +60,7 @@ interface ApiService {
                  @Field("request_time") request_time:String,
                  @Field("type") type:Int,
                  @Field("no_of_passengers") no_of_passengers:Int,
+                 @Field("vehicle_category_id") vehicle_category_id:Int,
                  @Field("origin_longitude") origin_longitude:String,
                  @Field("origin_latitude") origin_latitude:String,
                  @Field("destination_longitude") destination_longitude:String,
@@ -65,6 +68,7 @@ interface ApiService {
                  @Field("origin_address") origin_address:String,
                  @Field("destination_address") destination_address:String,
                  @Field("distance") distance:String,
+                 @Field("payment_method") payment_method:String,
                  @Field("user_id") user_id:Int  ) :Call<saveride>
 
 

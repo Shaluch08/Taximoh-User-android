@@ -54,6 +54,7 @@ class Ride :AppCompatActivity(){
     lateinit var dist : String
      var passengerno : Int =0
      var type : Int=0
+    var payment_id :Int = 0;
      var  originlongitude : Double=0.0
      var  originlatitude : Double=0.0
      var  destlatitude : Double=0.0
@@ -201,19 +202,19 @@ class Ride :AppCompatActivity(){
                             "Bearer "+ sessionManager.fetchAuthToken(),
                             name.text.toString(),
                             phone.text.toString(),
-                            datetext, timetext, type,passengerno,
+                            datetext, timetext, type,passengerno,2,
                             originlongitude.toString(),
                             originlatitude.toString(),
                             destlongitude.toString(),
                             destlatitude.toString(),
                             origin.text.toString(),destination.text.toString(),
-                            dist,
+                            dist,payment_id.toString(),
                             it1
                     ).enqueue(object : Callback<saveride> {
                         override fun onResponse(call: Call<saveride>, response: Response<saveride>) {
-                            Log.i("", "post submitted to API." + response.body()!!)
+                            Log.d("", "post submitted to API." + response.body()!!)
                             if (response.isSuccessful()) {
-                                Log.v("vvv", response.body().toString()!!)
+                                Log.d("vvv", response.body().toString()!!)
                                 var lo: saveride = response.body()!!
                                 if (lo.status == 200) {
                                     progressDialog.dismiss()

@@ -3,7 +3,6 @@ package com.uveous.loopfoonpay
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
@@ -11,15 +10,20 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
-import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -44,37 +48,45 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class RequestRide :AppCompatActivity(), OnMapReadyCallback
 {
+    lateinit var sheet_bottom: LinearLayout
     private var pDialog: ProgressDialog? = null
     // Progress dialog type (0 - for Horizontal progress bar)
     val progress_bar_type = 0
     var destLatLng1: LatLng? = null
-    public lateinit var infocar: ImageView
-    public lateinit var infobike: ImageView
-    public lateinit var timedate: AppCompatButton
-    public lateinit var linearcar: LinearLayout
-    public lateinit var linearbike: LinearLayout
-    public lateinit var progress: LinearLayout
-    public lateinit var carprice: TextView
-    public lateinit var bikeprice: TextView
-    public lateinit var request: AppCompatButton
-    public lateinit var textcar: TextView
-    public lateinit var originaddress1: TextView
-    public lateinit var destination: TextView
-    public lateinit var datetime: TextView
-    public lateinit var totalFare: AppCompatButton
-    public lateinit var cancel: AppCompatButton
-    public lateinit var progressbar: ProgressBar
+
+    lateinit var layout_wallet : LinearLayout
+    lateinit var layout_cash : LinearLayout
+
+    lateinit var timedate: AppCompatButton
+
+    lateinit var progress: LinearLayout
+
+    lateinit var request: AppCompatButton
+    lateinit var textcar: TextView
+    lateinit var originaddress1: TextView
+    lateinit var destination: TextView
+    lateinit var datetime: TextView
+    lateinit var totalFare: AppCompatButton
+    lateinit var cancel: AppCompatButton
+    lateinit var progressbar: ProgressBar
+    lateinit var recyclerlist: RecyclerView
+    lateinit var recyclerpaymentlist: RecyclerView
     var distance : String =""
     private var mMap: GoogleMap? = null
     private lateinit var sessionManager: SessionManager
     var PROVIDER = ""
     var type :Int = 0
+    var payment_id :Int = 0;
+    var vehicle_category_id  :Int = 0
     lateinit var sheet_request_trip: LinearLayout
     lateinit var lo: GetPrice
     lateinit var lo1: saveride
+    lateinit var lo2: PaymentMethods
+
     lateinit var originaddress : String
     lateinit var destinationaddress : String
     lateinit var back:ImageView
@@ -106,93 +118,54 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
 
     private fun initView(){
 
+        layout_wallet = findViewById(R.id.box_wallet)
+        layout_cash = findViewById(R.id.box_cash)
+
         sheet_request_trip=findViewById(R.id.sheet_request_trip)
-        linearcar=findViewById(R.id.linearcar)
-        linearbike=findViewById(R.id.linearbike)
+
+        sheet_bottom = findViewById(R.id.bottomsheet1)
+
         progress=findViewById(R.id.progress)
-        carprice=findViewById(R.id.carprice)
-        bikeprice=findViewById(R.id.bikeprice)
+
         request=findViewById(R.id.request)
-        infocar=findViewById(R.id.infocar)
-        infobike=findViewById(R.id.infobike)
+
         timedate=findViewById(R.id.timedate)
-        textcar=findViewById(R.id.textcar)
         originaddress1=findViewById(R.id.originaddress)
         destination=findViewById(R.id.destination)
         datetime=findViewById(R.id.datetime)
         totalFare=findViewById(R.id.totalFare)
         cancel=findViewById(R.id.cancel)
         progressbar=findViewById(R.id.progressbar)
-         originaddress1.setText(originaddress)
-        destination.setText(destinationaddress)
+        recyclerlist=findViewById(R.id.recyclerlist)
+        recyclerpaymentlist = findViewById(R.id.recyclerpaymentlist)
+        originaddress1.text = originaddress
+        destination.text = destinationaddress
+        val layoutManager = LinearLayoutManager(applicationContext)
+        val layoutManager2 = LinearLayoutManager(applicationContext)
+        recyclerlist.layoutManager = layoutManager
+        recyclerlist.itemAnimator = DefaultItemAnimator()
+
+        recyclerpaymentlist.layoutManager = layoutManager2
+        recyclerpaymentlist.itemAnimator = DefaultItemAnimator()
+
 
         timedate.setOnClickListener(View.OnClickListener {
             datePicker()
         })
 
-        linearcar.setOnTouchListener(View.OnTouchListener { view, motionEvent -> // Show an alert dialog.
-            linearcar.setBackgroundColor(Color.parseColor("#DCDCDC"));
-            linearbike.setBackgroundColor(Color.parseColor("#ffffff"));
-            type = 1
-            false
-        })
-
-        linearbike.setOnTouchListener(View.OnTouchListener { view, motionEvent -> // Show an alert dialog.
-            linearbike.setBackgroundColor(Color.parseColor("#DCDCDC"));
-            linearcar.setBackgroundColor(Color.parseColor("#ffffff"));
-            type = 2
-            false
-        })
 
 
 
-        infobike.setOnClickListener(View.OnClickListener {
-            val dialog = Dialog(this@RequestRide)
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setCancelable(false)
-            dialog.setContentView(R.layout.pricedetails)
-            val yesBtn = dialog.findViewById(R.id.tv_ok_thanks) as TextView
-            val price = dialog.findViewById(R.id.price) as TextView
-            val base = dialog.findViewById(R.id.base) as TextView
-            val fare = dialog.findViewById(R.id.fare) as TextView
-            val tax = dialog.findViewById(R.id.tax) as TextView
-            val distance = dialog.findViewById(R.id.distance) as TextView
+           layout_wallet.setOnClickListener(View.OnClickListener {
+               payment_id = 1
 
-            price.setText(lo.currency+lo.bike.totalPrice)
-            base.setText(lo.currency+lo.bike.baseFare)
-            fare.setText(lo.currency+lo.bike.prKM)
-            tax.setText(lo.bike.tax)
-            distance.setText(lo.distance)
-            yesBtn.setOnClickListener {
-                dialog.dismiss()
-            }
+           })
 
-            dialog.show()
-        })
+               layout_cash.setOnClickListener(View.OnClickListener {
+                payment_id = 2
+            })
 
-        infocar.setOnClickListener(View.OnClickListener {
-            val dialog = Dialog(this@RequestRide)
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setCancelable(false)
-            dialog.setContentView(R.layout.pricedetails)
-            val yesBtn = dialog.findViewById(R.id.tv_ok_thanks) as TextView
-            val price = dialog.findViewById(R.id.price) as TextView
-            val base = dialog.findViewById(R.id.base) as TextView
-            val fare = dialog.findViewById(R.id.fare) as TextView
-            val tax = dialog.findViewById(R.id.tax) as TextView
-            val distance = dialog.findViewById(R.id.distance) as TextView
 
-            price.setText(lo.currency+lo.car.totalPrice)
-            base.setText(lo.currency+lo.car.baseFare)
-            fare.setText(lo.currency+lo.car.prKM)
-            tax.setText(lo.car.tax)
-            distance.setText(lo.distance)
-            yesBtn.setOnClickListener {
-                dialog.dismiss()
-            }
-
-            dialog.show()
-        })
 
 
 
@@ -201,11 +174,13 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
                      Toast.makeText(this,"Please select type",Toast.LENGTH_LONG).show()
                  }else{
 
+                     if (payment_id==0){
+                         Toast.makeText(this,"Please select Payment Option",Toast.LENGTH_LONG).show()
+                     }
+                     else{
                      try{
                      Log.v("dest",distance)
-
-
-                     /* val progressDialog = ProgressDialog(this)
+                         /* val progressDialog = ProgressDialog(this)
                       // progressDialog.setTitle("Kotlin Progress Bar")
                       progressDialog.setMessage("Please wait")
                       progressDialog.show()
@@ -217,29 +192,30 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
                                  "Bearer "+ sessionManager.fetchAuthToken(),
                                 sessionManager.fetchusername()!!,
                                 sessionManager.fetchuserno()!!,
-                                 datetext, timetext, type,1,
+                                 datetext, timetext, type,1,vehicle_category_id,
                                  originlongitude.toString(),
                                  originlatitude.toString(),
                                  destlongitude.toString(),
                                  destlatitude.toString(),
                                  originaddress1.text.toString(),destination.text.toString(),
-                                 distance,
+                                 distance,payment_id.toString(),
                                  it1
                          ).enqueue(object : Callback<saveride> {
                              override fun onResponse(call: Call<saveride>, response: Response<saveride>) {
-                                 Log.i("", "post submitted to API." + response.body()!!)
-                                 if (response.isSuccessful()) {
-                                     Log.v("vvv", response.body().toString()!!)
+                                 Log.i("", "post submitted to request ride API." + response.body()!!)
+                                 if (response.isSuccessful) {
+                                     Log.v("vvv", response.body().toString())
                                      lo1 = response.body()!!
                                      if (lo1.status == 200) {
-                                         if(type==1){
+                                         /*if(type==1){
                                              totalFare.setText("Total Fare : "+lo.currency+lo.car.totalPrice)
                                          }else{
                                              totalFare.setText("Total Fare : "+lo.currency+lo.bike.totalPrice)
-                                         }
+                                         }*/
                                          if(lo1.wait_time.contentEquals("current")){
                                              progress.visibility=VISIBLE
                                              sheet_request_trip.visibility=GONE
+                                             sheet_bottom.visibility= GONE
                                              back.visibility=GONE
                                              //getProgressStatus()
 
@@ -255,7 +231,7 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
                                                      handler.post(Runnable {
                                                            timer= timer + 5
                                                            getProgressStatus()
-                                                           progressbar.setProgress(status1)
+                                                         progressbar.progress = status1
 
                                                      })
                                                  }
@@ -283,7 +259,7 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
 
                      } catch (e: java.lang.Exception) {
 
-                     }
+                     } }
 
                  }
         })
@@ -296,6 +272,7 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
                 try{
                 val progressDialog = ProgressDialog(this@RequestRide)
                 // progressDialog.setTitle("Kotlin Progress Bar")
+
                 progressDialog.setMessage("Please wait")
                 progressDialog.show()
                 progressDialog.setCanceledOnTouchOutside(false)
@@ -305,7 +282,7 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
                     Callback<cancelride> {
                     override fun onResponse(call: Call<cancelride>, response: Response<cancelride>) {
                         Log.i("", "post submitted to API." + response.body()!!)
-                        if (response.isSuccessful()) {
+                        if (response.isSuccessful) {
                             var lo: cancelride = response.body()!!
                             if(lo.status==200){
                                 progressDialog.dismiss()
@@ -342,21 +319,21 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
         senddistance()
         datetext = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         timetext = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
-        datetime.setText(datetext +" , "+ timetext)
+        datetime.text = datetext +" , "+ timetext
     }
 
    fun getdriverdetail() {
        try {
            var mAPIService: ApiService? = null
            mAPIService = ApiClient.apiService
-           mAPIService!!.getdriverdetails(
+           mAPIService.getdriverdetails(
                "Bearer " + sessionManager.fetchAuthToken(),
                lo1.request_id, sessionManager.fetchuserid()!!
            ).enqueue(object : Callback<Driverdetail> {
                override fun onResponse(call: Call<Driverdetail>, response: Response<Driverdetail>) {
                    Log.i("", "post submitted to API." + response.body()!!)
-                   if (response.isSuccessful()) {
-                       Log.v("vvv", response.body().toString()!!)
+                   if (response.isSuccessful) {
+                       Log.v("vvv", response.body().toString())
                        var lo: Driverdetail = response.body()!!
                        if (lo.status == 200) {
                            val intent = Intent(
@@ -383,7 +360,7 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
                                        response: Response<cancelride>
                                    ) {
                                        Log.i("", "post submitted to API." + response.body()!!)
-                                       if (response.isSuccessful()) {
+                                       if (response.isSuccessful) {
                                            var lo: cancelride = response.body()!!
 
                                        }
@@ -421,18 +398,18 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
         try{
        var mAPIService: ApiService? = null
        mAPIService = ApiClient.apiService
-       mAPIService!!.getstatus(
+       mAPIService.getstatus(
            "Bearer "+ sessionManager.fetchAuthToken(),
            lo1.request_id,sessionManager.fetchuserid()!!
        ).enqueue(object : Callback<progressstatus> {
            override fun onResponse(call: Call<progressstatus>, response: Response<progressstatus>) {
                Log.i("", "post submitted to API." + response.body()!!)
-               if (response.isSuccessful()) {
-                   Log.v("vvv", response.body().toString()!!)
+               if (response.isSuccessful) {
+                   Log.v("vvv", response.body().toString())
                    var lo : progressstatus = response.body()!!
                    if (lo.status == 200) {
                        if(lo.request_status.contentEquals("accepted")){
-                           progressbar.setProgress(100)
+                           progressbar.progress = 100
                            status1=100
                            progress.visibility= GONE
                            if(a==0) {
@@ -454,7 +431,7 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
                                         Callback<cancelride> {
                                     override fun onResponse(call: Call<cancelride>, response: Response<cancelride>) {
                                         Log.i("", "post submitted to API." + response.body()!!)
-                                        if (response.isSuccessful()) {
+                                        if (response.isSuccessful) {
                                             var lo: cancelride = response.body()!!
 
                                         }
@@ -495,7 +472,7 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
             dialog.setContentView(R.layout.place_layout)
             val yesBtn = dialog.findViewById(R.id.tv_ok_thanks) as TextView
             val tv_message_thanks = dialog.findViewById(R.id.tv_message_thanks) as TextView
-            tv_message_thanks.setText(text)
+            tv_message_thanks.text = text
             yesBtn.setOnClickListener {
                 dialog.dismiss()
                 val intent = Intent(this@RequestRide, TravelDashboard::class.java)
@@ -534,8 +511,8 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
         calendar.add(Calendar.MONTH, 1)
         val now = System.currentTimeMillis() - 1000
         val maxDate = calendar.timeInMillis
-        datePickerDialog.getDatePicker().setMinDate(now)
-        datePickerDialog.getDatePicker().setMaxDate(maxDate) //After one month from now
+        datePickerDialog.datePicker.minDate = now
+        datePickerDialog.datePicker.maxDate = maxDate //After one month from now
         datePickerDialog.show()
     }
     var amPm: String? = null
@@ -551,13 +528,19 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
                 amPm = "AM"
             }
             timetext=String.format("%02d:%02d", hourOfDay, minutes) + amPm
-            datetime.setText(date +" , "+ String.format("%02d:%02d", hourOfDay, minutes) + amPm)
+            datetime.text = date +" , "+ String.format("%02d:%02d", hourOfDay, minutes) + amPm
         }, hour, minute, true)
 
         timePickerDialog.show()
 
 
     }
+
+    private lateinit var vehicleListAdapter: VehicleListAdapter
+    private lateinit var paymentListAdapter: PaymentListAdapter
+    lateinit var resultvehicle: ArrayList<String>
+
+
     private fun senddistance() {
 
         try{
@@ -568,18 +551,25 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
         progressDialog.setCanceledOnTouchOutside(false)
         var mAPIService: ApiService? = null
         mAPIService = ApiClient.apiService
-        mAPIService!!.senddistance(
+       mAPIService.senddistance(
                 "Bearer "+ sessionManager.fetchAuthToken(),
-                distance
+                distance, sessionManager.fetchuserid()!!
         ).enqueue(object : Callback<GetPrice> {
             override fun onResponse(call: Call<GetPrice>, response: Response<GetPrice>) {
-                Log.i("", "post submitted to API." + response.body()!!)
-                if (response.isSuccessful()) {
-                    Log.v("vvv", response.body().toString()!!)
+                Log.i("", "distance submitted to API." + response.body()!!)
+                if (response.isSuccessful) {
+                    Log.v("vvv", response.body().toString())
                     lo = response.body()!!
                     if (lo.status == 200) {
-                        carprice.setText(lo.currency+lo.car.totalPrice)
-                        bikeprice.setText(lo.currency+lo.bike.totalPrice)
+                        vehicleListAdapter = VehicleListAdapter(lo.vehicleCategory,lo.currency,lo.distance,this@RequestRide)
+                        recyclerlist.adapter = vehicleListAdapter
+
+                        paymentListAdapter = PaymentListAdapter(lo,lo.paymentMethods,lo.imageUrl,this@RequestRide)
+                        recyclerpaymentlist.adapter = paymentListAdapter
+
+
+                    /*    carprice.setText(lo.currency+lo.car.totalPrice)
+                        bikeprice.setText(lo.currency+lo.bike.totalPrice)*/
                         /*     distance1.setText(lo.distance)
                              distance2.setText(lo.distance)*/
                         progressDialog.dismiss()
@@ -604,7 +594,7 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
 
     override fun onMapReady(p0: GoogleMap?) {
         mMap = p0
-        mMap!!.getUiSettings().setZoomControlsEnabled(true)
+        mMap!!.uiSettings.isZoomControlsEnabled = true
     }
     var  originlongitude : Double=0.0
     var  originlatitude : Double=0.0
@@ -735,7 +725,7 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
             urlConnection.connect()
 
             // Reading data from url
-            iStream = urlConnection!!.inputStream
+            iStream = urlConnection.inputStream
             val br =
                     BufferedReader(InputStreamReader(iStream))
             val sb = StringBuffer()
@@ -821,8 +811,136 @@ class RequestRide :AppCompatActivity(), OnMapReadyCallback
 
     override fun onBackPressed() {
      /*   super.onBackPressed()*/
-        moveTaskToBack(false);
+        moveTaskToBack(false)
 
     }
+
+    inner class VehicleListAdapter(private var vehicleList: List<VehicleCategory>,var currency:String,var dis : String,val context :Context) :
+            RecyclerView.Adapter<VehicleListAdapter.MyViewHolder>() {
+         var pos: Int = -1
+
+        inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            var textcar: TextView = view.findViewById(R.id.textcar)
+            var carprice: TextView = view.findViewById(R.id.carprice)
+            var infocar: ImageView = view.findViewById(R.id.infocar)
+            var image: ImageView = view.findViewById(R.id.image)
+            var linearcar: LinearLayout = view.findViewById(R.id.linearcar)
+        }
+        @NonNull
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val itemView = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.vechilelist, parent, false)
+            return MyViewHolder(itemView)
+        }
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            holder.textcar.text = vehicleList.get(position).name
+            holder.carprice.text = vehicleList.get(position).totalPrice
+            Glide.with(context).load(vehicleList.get(position).vehiclePhoto).into(holder.image)
+            holder.infocar.setOnClickListener(View.OnClickListener {
+                val dialog = Dialog(context)
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog.setCancelable(false)
+                dialog.setContentView(R.layout.pricedetails)
+                val yesBtn = dialog.findViewById(R.id.tv_ok_thanks) as TextView
+                val price = dialog.findViewById(R.id.price) as TextView
+                val base = dialog.findViewById(R.id.base) as TextView
+                val fare = dialog.findViewById(R.id.fare) as TextView
+                val taxx = dialog.findViewById(R.id.taxx) as TextView
+                val tax = dialog.findViewById(R.id.tax) as TextView
+                val distance = dialog.findViewById(R.id.distance) as TextView
+
+                price.text = currency+vehicleList.get(position).totalPrice
+                base.text = currency+vehicleList.get(position).baseFare
+                fare.text = currency+vehicleList.get(position).prKM
+                tax.text = currency+vehicleList.get(position).taxrate
+                taxx.text = "Tax ( "+vehicleList.get(position).tax+" )"
+                distance.text = dis
+                yesBtn.setOnClickListener {
+                    dialog.dismiss()
+                }
+
+                dialog.show()
+            })
+
+
+
+            holder.linearcar.setOnClickListener(View.OnClickListener {
+                type =vehicleList.get(position).vehicle_id
+                vehicle_category_id  =vehicleList.get(position).vehicleCategoryID
+                pos=position
+                notifyDataSetChanged()
+
+            })
+
+            if(pos==position){
+                holder.linearcar.setBackgroundColor(context.resources.getColor(R.color.black2))
+            }else{
+                holder.linearcar.setBackgroundColor(context.resources.getColor(R.color.white))
+            }
+
+        }
+
+        override fun getItemCount(): Int {
+            return vehicleList.size
+        }
+    }
+
+    inner class PaymentListAdapter(
+        lo: GetPrice,
+        private var paymentList: List<PaymentMethods>,
+        val image: String,
+        val context: Context
+    ) :
+            RecyclerView.Adapter<PaymentListAdapter.MyViewHolder>() {
+        var pos: Int = -1
+
+        inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            var paymentname: TextView = view.findViewById(R.id.textpayment)
+            var balnce: TextView = view.findViewById(R.id.textbalance)
+            var image: ImageView = view.findViewById(R.id.image_payment)
+            var linearpay: LinearLayout = view.findViewById(R.id.row_payment)
+        }
+        @NonNull
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val itemView = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.paymentlist, parent, false)
+            return MyViewHolder(itemView)
+        }
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            holder.paymentname.text = paymentList.get(position).paymentName
+
+            if (paymentList.get(position).paymentSlug.equals("wallet")){
+                holder.balnce.text = lo.currency+" "+lo.walletAmount
+            } else{
+                holder.balnce.text = ""
+            }
+
+
+            Glide.with(context).load(image+paymentList.get(position).paymentIcon).into(holder.image)
+
+
+
+
+            holder.linearpay.setOnClickListener(View.OnClickListener {
+                payment_id  = paymentList[position].paymentId.toInt()
+                pos=position
+                notifyDataSetChanged()
+
+            })
+
+            if(pos==position){
+                holder.linearpay.setBackgroundColor(context.resources.getColor(R.color.black2))
+            }else{
+                holder.linearpay.setBackgroundColor(context.resources.getColor(R.color.white))
+            }
+
+        }
+
+        override fun getItemCount(): Int {
+            return paymentList.size
+        }
+    }
+
+
 
 }
